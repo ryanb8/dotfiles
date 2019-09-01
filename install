@@ -8,7 +8,41 @@ DOTBOT_DIR=".dotbot"
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+EXPECTED_DIRS=( "../.local_dotfiles" )
+EXPECTED_FILES=(\
+ "../.local_dotfiles/bash_profile_before.sh"\
+ "../.local_dotfiles/bash_profile_after.sh" )
+
 cd "${BASEDIR}"
+
+for dir in "${EXPECTED_DIRS[@]}"
+do
+    if [ ! -d "$dir" ]]; then
+        mkdir $dir
+        git init
+        echo "$dir created (dir) and initialized git repo"
+    else
+        echo "$dir already exists (dir)"
+    fi
+done
+
+do_git=0
+for file in "${EXPECTED_FILES[@]}"
+do
+    if [[ ! -f "$file" ]]; then
+        touch $file
+        git add $file
+        do_git=1
+        echo "$file created (file - currently empty)"
+    else
+        echo "$file already exists (empty)"
+    fi
+done
+
+if [[ do_git = 1 ]]; then
+    git commit -m "Initialize empty local_dotfile config files"
+fi
+
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"

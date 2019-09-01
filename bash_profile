@@ -1,7 +1,7 @@
 ### ----
 # Local bash_profile before core
 ####
-if [ -f ~/.local_dotfiles/bash_profile_befor.sh ]; then
+if [[ -f "~/.local_dotfiles/bash_profile_before.sh" ]]; then
     source ~/.local_dotfiles/bash_profile_before.sh
 fi
 
@@ -35,9 +35,13 @@ export CLICOLOR=1
 ### ----
 # secrets
 ### ---
-set -a
-. ./.secrets
-set +a
+if [[ -f "./.secrets" ]]; then
+    set -a
+    . ./.secrets
+    set +a
+else
+    echo "No secrets imported - no file ./.secrets exists"
+fi
 
 ### ----
 # Aliases
@@ -52,7 +56,7 @@ fi
 ### ----
 # Local bash_profile after core
 ####
-if [ -f ~/.local_dotfiles/bash_profile_after ]; then
-    source ~/.local_dotfiles/bash_profile_after
+if [[ -f "~/.local_dotfiles/bash_profile_after.sh" ]]; then
+    source ~/.local_dotfiles/bash_profile_after.sh
 fi
 
