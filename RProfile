@@ -9,8 +9,8 @@ options(scipen=10)
 options(rf.cores=parallel::detectCores(), mc.cores=parallel::detectCores())
 
 # Source Ryan's Custom  Functions
-source(".dot_helpers/funcs.R")
+source("~/.dot_helpers/funcs.R")
 
 if (file.exists("work_funcs.R")){
-  source(".work_funcs.R")
+  source("~/work_funcs.R")
 }
