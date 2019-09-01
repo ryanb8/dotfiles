@@ -1,11 +1,3 @@
-#.git_config
-# bash
-# rprofile
-# .R
-# vim
-# secrets method
-
-
 - defaults:
     link:
       create: true
