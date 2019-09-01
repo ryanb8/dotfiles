@@ -8,10 +8,10 @@ DOTBOT_DIR=".dotbot"
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-EXPECTED_DIRS=( "../.local_dotfiles" )
+EXPECTED_DIRS=( "../.dotfiles_local" )
 EXPECTED_FILES=(\
- "../.local_dotfiles/bash_profile_before.sh"\
- "../.local_dotfiles/bash_profile_after.sh" )
+ "../.dotfiles_local/bash_profile_before.sh"\
+ "../.dotfiles_local/bash_profile_after.sh" )
 
 cd "${BASEDIR}"
 
