@@ -28,5 +28,3 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-
-# Create secrets file if doesn't exist

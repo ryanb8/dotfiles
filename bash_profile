@@ -35,6 +35,7 @@ export CLICOLOR=1
 ### ----
 # secrets
 ### ---
+echo 'Attempting to read secrets from `~/.secrets`'
 if [[ -f "./.secrets" ]]; then
     set -a
     . ./.secrets
