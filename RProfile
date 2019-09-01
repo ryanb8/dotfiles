@@ -1,0 +1,16 @@
+# Load .Renviron replacement
+readRenviron("~/.secrets")
+
+# R options
+Sys.setenv(TZ='GMT')
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+options(stringsAsFactors=FALSE)
+options(scipen=10)
+options(rf.cores=parallel::detectCores(), mc.cores=parallel::detectCores())
+
+# Source Ryan's Custom  Functions
+source("~/.dot_helpers/funcs.R")
+
+if (file.exists("work_funcs.R")){
+  source("~/work_funcs.R")
+}

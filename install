@@ -2,14 +2,53 @@
 
 set -e
 
-CONFIG="install.conf.yaml"
+CONFIG=".install.conf.yaml"
 DOTBOT_DIR="dotbot"
 
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+EXPECTED_DIR="../dotfiles_local"
+EXPECTED_FILES=(\
+ "bash_profile_before.sh"\
+ "bash_profile_after.sh" )
+
 cd "${BASEDIR}"
-git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
+
+if [[ ! -d ""${EXPECTED_DIR}"" ]]; then
+    mkdir "${EXPECTED_DIR}"
+    cd "${EXPECTED_DIR}"
+    git init
+    echo "${EXPECTED_DIR}"" created (dir) and initialized git repo"
+    cd "${BASEDIR}"
+    echo "${BASEDIR}"
+else
+    echo "${EXPECTED_DIR}"" already exists (dir)"
+fi
+
+do_git=0
+for file in "${EXPECTED_FILES[@]}"
+do
+    if [[ ! -f "${EXPECTED_DIR}"/"$file" ]]; then
+        cd "${EXPECTED_DIR}"
+        touch $file
+        echo "#!/usr/bin/env bash" >> $file
+        git add $file
+        do_git=1
+        echo "$file created (file - currently empty)"
+        cd "${BASEDIR}"
+    else
+        echo "$file already exists (possibly empty)"
+    fi
+done
+
+if [[ "$do_git" -eq "1" ]]; then
+    cd "${EXPECTED_DIR}"
+    git commit -m "Initialize empty local_dotfile config files"
+    echo "Commited empty scripts to local_dotfiles/"
+    cd "${BASEDIR}"
+fi
+
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"

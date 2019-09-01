@@ -1,0 +1,22 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.dotfiles: ''
+    ~/.vimrc: vimrc
+    ~/.RProfile: RProfile
+    ~/.gitconfig: gitconfig
+    ~/.bash_profile:
+      path: bash_profile
+      relink: true
+    ~/.dot_helpers:
+      glob: true
+      path: dot_helpers/*
+
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
