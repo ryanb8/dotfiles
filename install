@@ -3,21 +3,21 @@
 set -e
 
 CONFIG=".install.conf.yaml"
-DOTBOT_DIR=".dotbot"
+DOTBOT_DIR="dotbot"
 
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-EXPECTED_DIRS=( "../.dotfiles_local" )
+EXPECTED_DIRS=( "../dotfiles_local" )
 EXPECTED_FILES=(\
- "../.dotfiles_local/bash_profile_before.sh"\
- "../.dotfiles_local/bash_profile_after.sh" )
+ "../dotfiles_local/bash_profile_before.sh"\
+ "../dotfiles_local/bash_profile_after.sh" )
 
 cd "${BASEDIR}"
 
 for dir in "${EXPECTED_DIRS[@]}"
 do
-    if [ ! -d "$dir" ]]; then
+    if [[ ! -d "$dir" ]]; then
         mkdir $dir
         git init
         echo "$dir created (dir) and initialized git repo"
@@ -35,7 +35,7 @@ do
         do_git=1
         echo "$file created (file - currently empty)"
     else
-        echo "$file already exists (empty)"
+        echo "$file already exists (possibly empty)"
     fi
 done
 
