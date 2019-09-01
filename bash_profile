@@ -1,7 +1,7 @@
 ### ----
 # Local bash_profile before core
 ####
-if [[ -f "~/dotfiles_local/bash_profile_before.sh" ]]; then
+if [[ -f ~/dotfiles_local/bash_profile_before.sh ]]; then
     source ~/dotfiles_local/bash_profile_before.sh
 fi
 
@@ -56,7 +56,7 @@ fi
 ### ----
 # Local bash_profile after core
 ####
-if [[ -f "~/dotfiles_local/bash_profile_after.sh" ]]; then
+if [[ -f ~/dotfiles_local/bash_profile_after.sh ]]; then
     source ~/dotfiles_local/bash_profile_after.sh
 fi
 

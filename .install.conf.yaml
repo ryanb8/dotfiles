@@ -18,10 +18,12 @@
     ~/.vimrc: vimrc
     ~/.RProfile: RProfile
     ~/.gitconfig: gitconfig
-    ~/.bash_profile: bash_profile
+    ~/.bash_profile:
+      path: bash_profile
+      relink: true
     ~/.dot_helpers:
-        glob: true
-        path: dot_helpers/*
+      glob: true
+      path: dot_helpers/*
 
 
 - shell:

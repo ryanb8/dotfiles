@@ -8,39 +8,43 @@ DOTBOT_DIR="dotbot"
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-EXPECTED_DIRS=( "../dotfiles_local" )
+EXPECTED_DIR="../dotfiles_local"
 EXPECTED_FILES=(\
  "../dotfiles_local/bash_profile_before.sh"\
  "../dotfiles_local/bash_profile_after.sh" )
 
 cd "${BASEDIR}"
 
-for dir in "${EXPECTED_DIRS[@]}"
-do
-    if [[ ! -d "$dir" ]]; then
-        mkdir $dir
-        git init
-        echo "$dir created (dir) and initialized git repo"
-    else
-        echo "$dir already exists (dir)"
-    fi
-done
+if [[ ! -d ""${EXPECTED_DIR}"" ]]; then
+    mkdir "${EXPECTED_DIR}"
+    cd "${EXPECTED_DIR}"
+    git init
+    echo ""${EXPECTED_DIR}" created (dir) and initialized git repo"
+    cd "${BASEDIR}"
+else
+    echo ""${EXPECTED_DIR}" already exists (dir)"
+fi
 
 do_git=0
 for file in "${EXPECTED_FILES[@]}"
 do
     if [[ ! -f "$file" ]]; then
+        cd "${EXPECTED_DIR}"
         touch $file
+        echo "#!/usr/bin/env bash" >> $file
         git add $file
         do_git=1
         echo "$file created (file - currently empty)"
+        cd "${BASEDIR}"
     else
         echo "$file already exists (possibly empty)"
     fi
 done
 
 if [[ do_git = 1 ]]; then
+    cd "${EXPECTED_DIR}"
     git commit -m "Initialize empty local_dotfile config files"
+    cd "${BASEDIR}"
 fi
 
 git submodule update --init --recursive "${DOTBOT_DIR}"
