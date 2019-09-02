@@ -13,9 +13,8 @@ I keep my secrets (tokens; not like my most embarassing  moment or my greatest f
 1. In your home directory, run:
 
   ```sh
-  mkdir dotfiles \
+  mkdir git clone https://github.com/ryanb8/dotfiles.git \
     && cd dotfiles \
-    && git clone https://github.com/ryanb8/dotfiles.git \
     && ./install
   ```
 This will not overwrite any existing profiles.
