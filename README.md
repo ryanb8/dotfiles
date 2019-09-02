@@ -13,7 +13,7 @@ I keep my secrets (tokens; not like my most embarassing  moment or my greatest f
 1. In your home directory, run:
 
   ```sh
-  mkdir git clone https://github.com/ryanb8/dotfiles.git \
+  git clone https://github.com/ryanb8/dotfiles.git \
     && cd dotfiles \
     && ./install
   ```
