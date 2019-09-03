@@ -104,9 +104,13 @@ rb_vec_print_sort_ret_delimited <- function(v, sep = '', quote = ''){
 #'
 #' Get a datetime in a nice format to put in filenames'
 #'
-rb_dt_for_file <- function(){
- current_time <- as.character(Sys.time())
- current_time <- gsub("-|:| [a-zA-z]{2,}$", "", current_time)
- current_time <- gsub(" ", "_", current_time)
- return(current_time)
+rb_dt_for_file <- function(time = Sys.time(), use_ms=FALSE){
+  if(use_ms){
+    format_str <- '%Y%m%d_%H%M%OS6'
+  } else {
+    format_str <- '%Y%m%d_%H%M%S'
+  }
+  time <- strftime(time, format = format_str)
+  time <- gsub(pattern = "\\.", replacement = "_", x = time)
+  return(time)
 }
