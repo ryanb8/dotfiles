@@ -36,12 +36,12 @@ export CLICOLOR=1
 # secrets
 ### ---
 echo 'Attempting to read secrets from `~/.secrets`'
-if [[ -f "./.secrets" ]]; then
+if [[ -f ~/.secrets ]]; then
     set -a
-    . ./.secrets
+    . ~/.secrets
     set +a
 else
-    echo "No secrets imported - no file ./.secrets exists"
+    echo "No secrets imported - no file ~/.secrets exists"
 fi
 
 ### ----
