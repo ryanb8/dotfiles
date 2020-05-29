@@ -65,4 +65,3 @@ fi
 if [[ -f ~/dotfiles_local/bash_profile_after.sh ]]; then
     source ~/dotfiles_local/bash_profile_after.sh
 fi
-
