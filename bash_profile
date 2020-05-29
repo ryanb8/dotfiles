@@ -60,6 +60,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 ### ----
+# Additional Bash Completions
+### ----
+source ~/.dot_helpers/poetry.bash-completion
+
+### ----
 # Local bash_profile after core
 ####
 if [[ -f ~/dotfiles_local/bash_profile_after.sh ]]; then
