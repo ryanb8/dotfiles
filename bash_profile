@@ -60,6 +60,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 ### ----
+# bash completions using homebrew
+### ----
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+. $(brew --prefix)/etc/bash_completion
+fi
+
+### ----
 # Local bash_profile after core
 ####
 if [[ -f ~/dotfiles_local/bash_profile_after.sh ]]; then
