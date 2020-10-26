@@ -7,6 +7,7 @@
 
 - link:
     ~/.dotfiles: ''
+    ~/.zshrc: zshrc
     ~/.vimrc: vimrc
     ~/.RProfile: RProfile
     ~/.gitconfig: gitconfig
