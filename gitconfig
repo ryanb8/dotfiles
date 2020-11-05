@@ -1,7 +1,7 @@
 [user]
 	name = Ryan Boyer
     email = ryanboyerpublic@gmail.com
-    
+
 [alias]
     lg = !"git lg1"
     lg1 = !"git lg1-specific --all"
