@@ -4,3 +4,12 @@
 [submodule "dot_helpers/gitstatus"]
 	path = dot_helpers/gitstatus
 	url = https://github.com/romkatv/gitstatus.git
+[submodule "dot_helpers/zsh-syntax-highlighting"]
+	path = dot_helpers/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "dot_helpers/zsh-history-substring-search"]
+	path = dot_helpers/zsh-history-substring-search
+	url = https://github.com/zsh-users/zsh-history-substring-search.git
+[submodule "dot_helpers/zsh-autosuggestions"]
+	path = dot_helpers/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
