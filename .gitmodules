@@ -13,3 +13,6 @@
 [submodule "dot_helpers/zsh-autosuggestions"]
 	path = dot_helpers/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "dot_helpers/fzf-tab"]
+	path = dot_helpers/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git

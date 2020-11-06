@@ -3,6 +3,14 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
     source ~/dotfiles_local/zshrc.zsh
 fi
 
+#Check and alert for dependencies:
+if ! type fzf  > /dev/null; then
+    echo "fzf not found - install from https://github.com/junegunn/fzf for full functionality"
+fi
+if ! type exa  > /dev/null; then
+    echo "exa not found - install from https://github.com/ogham/exa for full functionality"
+fi
+
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
 source ~/.dotfiles/dot_helpers/zkbd.zsh
@@ -27,10 +35,20 @@ promptinit
 # i.e. find new executables in path automatically
 zstyle ':completion:*' rehash true
 
-# Completion Configuration:
+### Completion Configuration:
 # Double tab gives completion menu
 zstyle ':completion:*' menu select
-# Fish style auto-suggestions
+### Setup fzf:
+# if the shell is interactive, turn this on
+[[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
+### Use fzf for completion menus
+# Must be before zsh-autosuggestions or other
+source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
+zstyle ":completion:*:git-checkout:*" sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+### Fish style auto-suggestions
 # from: https://github.com/zsh-users/zsh-autosuggestions#configuration
 source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Don't use history sugggestions for cd - it probably doesn't make sense relative
@@ -38,6 +56,7 @@ source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *)"
 # Don't use Autosuggest for git commands.
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
+
 
 # Aliases - Platform specific ones are within if blocks
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
