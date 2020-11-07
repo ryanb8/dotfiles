@@ -16,7 +16,7 @@ source ~/.dotfiles/dot_helpers/dirs.zsh
 export GIT_EDITOR=vim
 source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
 zstyle ':completion:*:*:git:*' script ~/.dotfiles/dot_helpers/git-completion.bash
-fpath=(~/.dotfiles/dot_helpers $fpath)
+fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src)
 function gitstatus_in_git_update() {
     typeset -g GITSTATUS_IN_GIT='|'
 

@@ -16,3 +16,6 @@
 [submodule "dot_helpers/fzf-tab"]
 	path = dot_helpers/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab.git
+[submodule "dot_helpers/zsh-completions"]
+	path = dot_helpers/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
