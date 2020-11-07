@@ -1,6 +1,6 @@
 # Local profile before core
 if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
-    source ~/dotfiles_local/zshrc.zsh
+    source ~/dotfiles_local/zshrc_before.zsh
 fi
 
 # Ensure that keybindings are set
@@ -72,7 +72,7 @@ ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 
 # My gitstaut prompt has some minor personal adjustments
-PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"| "
+PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
 
 # Inject secrets from secrets file
 echo 'Attempting to read secrets from `~/.secrets`'
