@@ -3,14 +3,6 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
     source ~/dotfiles_local/zshrc.zsh
 fi
 
-#Check and alert for dependencies:
-if ! type fzf  > /dev/null; then
-    echo "fzf not found - install from https://github.com/junegunn/fzf for full functionality"
-fi
-if ! type exa  > /dev/null; then
-    echo "exa not found - install from https://github.com/ogham/exa for full functionality"
-fi
-
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
 source ~/.dotfiles/dot_helpers/zkbd.zsh
@@ -25,6 +17,15 @@ export GIT_EDITOR=vim
 source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
 zstyle ':completion:*:*:git:*' script ~/.dotfiles/dot_helpers/git-completion.bash
 fpath=(~/.dotfiles/dot_helpers $fpath)
+function gitstatus_in_git_update() {
+    typeset -g GITSTATUS_IN_GIT='|'
+
+    if [ $GITSTATUS_PROMPT_LEN -eq 0 ]; then
+        GITSTATUS_IN_GIT=''
+    fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd gitstatus_in_git_update
 
 # Core completion things
 autoload -Uz compinit promptinit
@@ -39,15 +40,24 @@ zstyle ':completion:*' rehash true
 # Double tab gives completion menu
 zstyle ':completion:*' menu select
 ### Setup fzf:
-# if the shell is interactive, turn this on
-[[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
-### Use fzf for completion menus
-# Must be before zsh-autosuggestions or other
-source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
-zstyle ":completion:*:git-checkout:*" sort false
-zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+if ! type fzf  > /dev/null; then
+    echo "fzf not found - install from https://github.com/junegunn/fzf for full functionality"
+else
+    # if the shell is interactive, turn this on
+    [[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
+    ### Use fzf for completion menus
+    # Must be before zsh-autosuggestions or other
+    source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
+    zstyle ":completion:*:git-checkout:*" sort false
+    zstyle ':completion:*:descriptions' format '[%d]'
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+    if ! type exa  > /dev/null; then
+        echo "exa not found - install from https://github.com/ogham/exa for full functionality"
+    else
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+    fi
+fi
+
 ### Fish style auto-suggestions
 # from: https://github.com/zsh-users/zsh-autosuggestions#configuration
 source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -62,8 +72,7 @@ ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 
 # My gitstaut prompt has some minor personal adjustments
-# TODO: I need to do this still ^^^^
-PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_PROMPT'"  "
+PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"| "
 
 # Inject secrets from secrets file
 echo 'Attempting to read secrets from `~/.secrets`'
