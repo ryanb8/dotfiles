@@ -55,6 +55,8 @@ else
     # Must be before zsh-autosuggestions or other
     source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
     bindkey '^F' toggle-fzf-tab  # Toggel fzf-tab on abd off with ctlr-f
+    toggle-fzf-tab   # default to off
+    echo "fzf-tab is set to off - toggle with ctrl-f"
     # zstyle ":completion:*:git-checkout:*" sort false
     zstyle ':completion:*:descriptions' format '[%d]'
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
