@@ -37,6 +37,12 @@ promptinit
 zstyle ':completion:*' rehash true
 
 ### Completion Configuration:
+# Colorize LS:
+export LS_COLORS="di=1;32:ln=35:so=36:pi=37;40:ex=1;31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+export LSCOLORS="CxfxgxhaBxegedabagacad"
+export CLICOLOR=1
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+#source ~/dotfiles/dot_helpers/LS_COLORS/LS_COLORS
 # Double tab gives completion menu
 zstyle ':completion:*' menu select
 ### Setup fzf:
@@ -48,6 +54,7 @@ else
     ### Use fzf for completion menus
     # Must be before zsh-autosuggestions or other
     source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
+    bindkey '^F' toggle-fzf-tab  # Toggel fzf-tab on abd off with ctlr-f
     # zstyle ":completion:*:git-checkout:*" sort false
     zstyle ':completion:*:descriptions' format '[%d]'
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -61,13 +68,15 @@ _aws_zsh_completer_path="$commands[aws_zsh_completer.sh]"
 if [[ -r $_aws_zsh_completer_path ]]; then
     pyenv_regex='\.pyenv'
     if [[ "$_aws_zsh_completer_path" =~ .*"$pyenv_regex".* ]]; then
-        echo "here"
         _aws_zsh_completer_path=$(pyenv prefix)/bin/aws_zsh_completer.sh
-        echo $_aws_zsh_completer_path
     fi
     autoload bashcompinit && bashcompinit
     source $_aws_zsh_completer_path
 fi
+# Missing Completetions:
+# Curl
+#
+
 
 ### Fish style auto-suggestions
 # from: https://github.com/zsh-users/zsh-autosuggestions#configuration
@@ -115,7 +124,7 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 
 
 
-
 # right arrow or end to accept auto suggestion
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
-# up arrow to search through past commands - if text is present it will filter past commands based on text
+# up arrow to search through past commands - if text is present it will filter past commands based on text,
+# ctrl-u cleans entire line

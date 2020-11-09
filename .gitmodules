@@ -19,3 +19,6 @@
 [submodule "dot_helpers/zsh-completions"]
 	path = dot_helpers/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "dot_helpers/LS_COLORS"]
+	path = dot_helpers/LS_COLORS
+	url = https://github.com/trapd00r/LS_COLORS.git
