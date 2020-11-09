@@ -38,6 +38,8 @@ zstyle ':completion:*' rehash true
 
 ### Completion Configuration:
 # Colorize LS:
+# BSD/MAC support this very differently than linux
+# This is a universal solution, BSD/Mac is the LCD.
 export LS_COLORS="di=1;32:ln=35:so=36:pi=37;40:ex=1;31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
 export LSCOLORS="CxfxgxhaBxegedabagacad"
 export CLICOLOR=1
@@ -56,6 +58,7 @@ else
     source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
     bindkey '^F' toggle-fzf-tab  # Toggel fzf-tab on abd off with ctlr-f
     toggle-fzf-tab   # default to off
+    # I want to be able to tab once and have it auto-complete THEN tab opens up fzf stuff
     echo "fzf-tab is set to off - toggle with ctrl-f"
     # zstyle ":completion:*:git-checkout:*" sort false
     zstyle ':completion:*:descriptions' format '[%d]'
@@ -99,7 +102,9 @@ PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ 
 # Inject secrets from secrets file
 echo 'Attempting to read secrets from `~/.secrets`'
 if [[ -f ~/.secrets ]]; then
+    set -a
     . ~/.secrets
+    set +a
 else
     echo "No secrets imported - no file ~/.secrets exists"
 fi
