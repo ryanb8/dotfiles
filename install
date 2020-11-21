@@ -11,7 +11,9 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EXPECTED_DIR="../dotfiles_local"
 EXPECTED_FILES=(\
  "bash_profile_before.sh"\
- "bash_profile_after.sh" )
+ "bash_profile_after.sh"\
+ "zshrc_before.zsh"\
+ "zshrc_after.zsh" )
 
 cd "${BASEDIR}"
 
