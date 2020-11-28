@@ -1,6 +1,10 @@
 ### ----
 # Local bash_profile before core
 ####
+if [[ -f ~/dotfiles_local/generic_shell_before.sh ]]; then
+    source ~/dotfiles_local/generic_shell_before.sh
+fi
+
 if [[ -f ~/dotfiles_local/bash_profile_before.sh ]]; then
     source ~/dotfiles_local/bash_profile_before.sh
 fi
@@ -71,4 +75,8 @@ fi
 ####
 if [[ -f ~/dotfiles_local/bash_profile_after.sh ]]; then
     source ~/dotfiles_local/bash_profile_after.sh
+fi
+
+if [[ -f ~/dotfiles_local/generic_shell_after.sh ]]; then
+    source ~/dotfiles_local/generic_shell_after.sh
 fi

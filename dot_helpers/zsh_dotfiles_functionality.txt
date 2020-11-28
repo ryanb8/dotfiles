@@ -1,0 +1,52 @@
+Zsh Dotfiles Functionality:
+
+Hot Keys Driven Functionality:
+- Built Ins:
+    - ctrl-a : jump to first character on line
+    - ctrl-e : jump to last character on line
+    - option-right : jump right one word
+    - option-left : jump left one word
+    - ctrl-u : delete to beginning of line
+    - ctrl-k : delete to end of line
+    - ctrl-w : delete backwards to begining of current word
+    - ctrl-c : abort current command or typing
+- Custom:
+    - ctrl-f : Toggle between zsh-menu and fzf-tab-menu completion (defaults to zsh-menu completion)
+    - zsh-menu completion:
+        - tab : complete current command or path if unique (or up to GCD)
+        - tab+tab : show zsh-complete menu
+        - tab+tab+tab + more tabs as needed: move focus to tab menu and cycle through options (shift-tab to cycle other direction)
+        - enter : (in menu selection focus) select option
+    - fzf-tab completion:
+        - tab: display fzf-tab completion menu
+        - tab + tab(s) or shif-tab(s) - shuffle through tab options
+        - enter - (in menu focus mode) select tabbed option and close menu
+        - / - (in menu focus mode) select tabbed option and search again (keeping menu open)
+    - Auto-Suggestions:
+        - right - accept and complete full greyed auto-suggestion
+        - option-right - accept and complete greyed auto-suggestion to next space or path break
+    - History Search:
+        - up or down (with empty command) - cycle through old commands
+        - up or down (with partial command) - cycle through old commands that match the partial command
+    - dirstack:
+        - run `dirs -v` to see most recent 20 directories (`dirs` command has other options)
+        - run `cd -<number>` to change to recent directory (works with tab completion, tab after `cd -`)
+
+Mac Details + Aliases:
+- The system allows mac's hidden files to be seen in finder
+- To turn this off, run the `hidefiles` command
+- To turn this back on, run the `showfiles` command
+
+Prompt:
+- The prompt is formated with <user>|<current directory>
+- When in a git repository, the prompt leverages gitstatus for git details
+- The gitstatus home page has more information on what is contained in the prompt: https://github.com/romkatv/gitstatus
+
+Colorization:
+- LS file colorization is currently configured for Mac/Unix/BSD operating systems, it should work with reduced functionality on linux.
+
+Syntax Highlighting:
+- zsh syntax highlighting is enabled
+- See: https://github.com/zsh-users/zsh-syntax-highlighting
+
+

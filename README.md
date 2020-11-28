@@ -17,12 +17,16 @@ I keep my secrets (tokens; not like my most embarassing  moment or my greatest f
     && cd dotfiles \
     && ./install
   ```
-This will not overwrite any existing profiles.
+This will not overwrite any existing profiles. The install list will report out on what was not linked/overwritten. 
 
-2. If profiles already existed, and you don't want to use the core profiles, then you are done. If you do want to use the core profiles, move/copy the desired content from the old profiles to the newly created `~/dotfiles_local/` folder and the associated scripts (listed belows). Adjust the core profiles to source files if any new files are created. 
+The install script is idempotent - feel free to run it again. This is usefull if you want to move current local profiles to the `~/dotfiles_local/*` directory (see below).
 
-Expected files in `dotfile_local`:
+1. If profiles already existed, and you don't want to use the core profiles, then you are done. If you do want to use the core profiles, move/copy the desired content from the old profiles to the newly created `~/dotfiles_local/` folder and the associated scripts (listed belows). Adjust the core profiles to source files if any new files are created. 
 
+Expected files in `dotfiles_local` (will be created if `dotfiles_local` does not exist):
+
+- `~/dotfiles_local/generic_shell_after.sh`
+- `~/dotfiles_local/generic_shell_before.sh`
 - `~/dotfiles_local/bash_profile_after.sh`
 - `~/dotfiles_local/zshrc_after.zsh`
 - `~/dotfiles_local/bash_profile_before.sh`
@@ -34,7 +38,8 @@ To update core dotfiles, edit them within the dotfiles git repository.
 
 ## Licensing
 
-I use [dotbot](https://github.com/anishathalye/dotbot/) to sync/vcs my dotfiles. It is licensed under MIT.
-I use several packages from the [zsh-users organization](https://github.com/zsh-users); this includes [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting), [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search), [zsh-completions](https://github.com/zsh-users/zsh-completions) - they use a variety of licenses: bsd-3, MIT, and the zsh license.
-I use [fzf-tab](https://github.com/Aloxaf/fzf-tab) which uses MIT.
-I use both [git-completion](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash) and [git-prompt](https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh) which are included in the base git distribution, though are user contributed by Shawn Pearce et. al. Git is licensed under GNU General Public License version 2.
+- I use [dotbot](https://github.com/anishathalye/dotbot/) to sync/vcs my dotfiles. It is licensed under MIT.
+- I use several packages from the [zsh-users organization](https://github.com/zsh-users); this includes [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting), [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions), [zsh-history-substring-search](https://github.com/zsh-users/zsh-history-substring-search), [zsh-completions](https://github.com/zsh-users/zsh-completions) - they use a variety of licenses: bsd-3, MIT, and the zsh license.
+- I use [fzf-tab](https://github.com/Aloxaf/fzf-tab) which uses MIT.
+- I use both [git-completion](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash) and [git-prompt](https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh) which are included in the base git distribution, though are user contributed by Shawn Pearce et. al. Git is licensed under GNU General Public License version 2.
+

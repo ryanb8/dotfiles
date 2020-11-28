@@ -1,4 +1,8 @@
 # Local profile before core
+if [[ -f ~/dotfiles_local/generic_shell_before.sh ]]; then
+    source ~/dotfiles_local/generic_shell_before.sh
+fi
+
 if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
     source ~/dotfiles_local/zshrc_before.zsh
 fi
@@ -49,7 +53,7 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu select
 ### Setup fzf:
 if ! type fzf  > /dev/null; then
-    echo "fzf not found - install from https://github.com/junegunn/fzf for full functionality"
+    echo "fzf not found - install from https://github.com/junegunn/fzf if desired"
 else
     # if the shell is interactive, turn this on
     [[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
@@ -64,7 +68,7 @@ else
     zstyle ':completion:*:descriptions' format '[%d]'
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
     if ! type exa  > /dev/null; then
-        echo "exa not found - install from https://github.com/ogham/exa for full functionality"
+        echo "exa not found - install from https://github.com/ogham/exa for full fzf functionality"
     else
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
     fi
@@ -80,7 +84,7 @@ if [[ -r $_aws_zsh_completer_path ]]; then
 fi
 # Missing Completetions:
 # Curl
-#
+# docker?
 
 
 ### Fish style auto-suggestions
@@ -95,6 +99,10 @@ ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
 
 # Aliases - Platform specific ones are within if blocks
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
+alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
+
+# Report on hot keys + functionality
+echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
 
 # My gitstaut prompt has some minor personal adjustments
 PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
@@ -116,6 +124,10 @@ if [[ -f ~/dotfiles_local/zshrc_after.zsh ]]; then
     source ~/dotfiles_local/zshrc_after.zsh
 fi
 
+if [[ -f ~/dotfiles_local/generic_shell_after.sh ]]; then
+    source ~/dotfiles_local/generic_shell_after.sh
+fi
+
 # Fish style syntax highlighting
 # from: https://github.com/zsh-users/zsh-syntax-highlighting
 # NOTE that this MUST be the last command in the zshrc (techincally the last zle hook)
@@ -128,8 +140,6 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"    history-substring-search-up
 [[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}"  history-substring-search-down
-
-
 
 # right arrow or end to accept auto suggestion
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
