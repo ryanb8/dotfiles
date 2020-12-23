@@ -19,3 +19,6 @@
 [submodule "dot_helpers/zsh-completions"]
 	path = dot_helpers/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "dot_helpers/zsh-nvm"]
+	path = dot_helpers/zsh-nvm
+	url = https://github.com/lukechilds/zsh-nvm.git

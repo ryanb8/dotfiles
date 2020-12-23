@@ -7,6 +7,11 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
     source ~/dotfiles_local/zshrc_before.zsh
 fi
 
+## lazy load nvm
+export NVM_LAZY_LOAD=true
+export NVM_COMPLETION=true
+source ~/.dotfiles/dot_helpers/zsh-nvm/zsh-nvm.plugin.zsh
+
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
 source ~/.dotfiles/dot_helpers/zkbd.zsh
@@ -85,6 +90,7 @@ fi
 # Missing Completetions:
 # Curl
 # docker?
+
 
 
 ### Fish style auto-suggestions
