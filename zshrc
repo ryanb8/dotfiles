@@ -36,6 +36,9 @@ function gitstatus_in_git_update() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd gitstatus_in_git_update
 
+# Additional Prompt Utils
+source ~/dotfiles/dot_helpers/pyenv.prompt.zsh
+
 # Core completion things
 autoload -Uz compinit promptinit
 compinit
@@ -111,7 +114,8 @@ alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
 echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
 
 # My gitstaut prompt has some minor personal adjustments
-PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
+
+PROMPT='$PYENV_PROMPT'"%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
 
 # Inject secrets from secrets file
 echo 'Attempting to read secrets from `~/.secrets`'
