@@ -10,7 +10,6 @@
     ~/.zshrc: zshrc
     ~/.vimrc: vimrc
     ~/.RProfile: RProfile
-    ~/.gitconfig: gitconfig
     ~/.bash_profile:
       path: bash_profile
       relink: true

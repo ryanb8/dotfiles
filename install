@@ -56,3 +56,5 @@ fi
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+
+echo ".gitconfig file is NOT handled by dotbot - Linux and OSX stubs available at https://github.com/ryanb8/dotfiles"

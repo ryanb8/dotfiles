@@ -21,7 +21,9 @@ This will not overwrite any existing profiles. The install list will report out 
 
 The install script is idempotent - feel free to run it again. This is usefull if you want to move current local profiles to the `~/dotfiles_local/*` directory (see below).
 
-1. If profiles already existed, and you don't want to use the core profiles, then you are done. If you do want to use the core profiles, move/copy the desired content from the old profiles to the newly created `~/dotfiles_local/` folder and the associated scripts (listed belows). Adjust the core profiles to source files if any new files are created. 
+On initial install you may want to manually update your `.gitconfig` using the stubs provided in the repo. Gitconfig can't be automated as it's user/platform specific.
+
+2. If profiles already existed, and you don't want to use the core profiles, then you are done. If you do want to use the core profiles, move/copy the desired content from the old profiles to the newly created `~/dotfiles_local/` folder and the associated scripts (listed belows). Adjust the core profiles to source files if any new files are created. 
 
 Expected files in `dotfiles_local` (will be created if `dotfiles_local` does not exist):
 
