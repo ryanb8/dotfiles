@@ -30,6 +30,12 @@ key[Shift-Tab]="${terminfo[kcbt]}"
 [[ -n "${key[PageDown]}"  ]] && bindkey -- "${key[PageDown]}"  end-of-buffer-or-history
 [[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}" reverse-menu-complete
 
+# this fixes linux - it might bork mac...
+bindkey '\eOc'    forward-word        # ctrl right
+bindkey '\eOd'    backward-word       # ctrl left
+bindkey '^[[1;5C' forward-word        # ctrl right
+bindkey '^[[1;5D' backward-word       # ctrl left
+
 # Finally, make sure the terminal is in application mode, when zle is
 # active. Only then are the values from $terminfo valid.
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
