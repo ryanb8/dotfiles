@@ -8,9 +8,11 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
 fi
 
 ## lazy load nvm
-export NVM_LAZY_LOAD=true
-export NVM_COMPLETION=true
-source ~/.dotfiles/dot_helpers/zsh-nvm/zsh-nvm.plugin.zsh
+if [[ ${USE_NVM_LAZY_LOAD-true} == 'true' ]]; then 
+    export NVM_LAZY_LOAD=true
+    export NVM_COMPLETION=true
+    source ~/.dotfiles/dot_helpers/zsh-nvm/zsh-nvm.plugin.zsh
+fi 
 
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
@@ -155,3 +157,4 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
 # up arrow to search through past commands - if text is present it will filter past commands based on text,
 # ctrl-u cleans entire line
+
