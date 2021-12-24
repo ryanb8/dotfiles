@@ -19,4 +19,24 @@
 [credential]
     helper = osxkeychain
 [pull]
-	ff = only
+    ff = only
+# You've got to setup gpg stuff manually for it to work
+# see https://gist.github.com/troyfontaine/18c9146295168ee9ca2b30c00bd1b41e
+# [gpg]
+#     program = /usr/local/bin/gpg
+# [commit]
+#     gpgsign = true
+[protocol]
+    version = 2
+[pull]
+    ff = only
+[core]
+    editor = vim
+    commitGraph = true
+[diff]
+    algorithm = patience
+[gc]
+    writeCommitGraph = true
+[init]
+    defaultBranch = main
+
