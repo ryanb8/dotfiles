@@ -1,6 +1,6 @@
 [user]
-    name = Ryan Boyer
-    email = ryanboyerpublic@gmail.com
+    name = YOUR_NAME_HERE Ryan Boyer
+    email = YOUR_EMAIL_HERE ryanboyerpublic@gmail.com
 [alias]
     lg = !"git lg1"
     lg1 = !"git lg1-specific --all"
