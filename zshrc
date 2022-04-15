@@ -8,11 +8,11 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
 fi
 
 ## lazy load nvm
-if [[ ${USE_NVM_LAZY_LOAD-true} == 'true' ]]; then 
+if [[ ${USE_NVM_LAZY_LOAD-true} == 'true' ]]; then
     export NVM_LAZY_LOAD=true
     export NVM_COMPLETION=true
     source ~/.dotfiles/dot_helpers/zsh-nvm/zsh-nvm.plugin.zsh
-fi 
+fi
 
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
@@ -83,6 +83,7 @@ else
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
     fi
 fi
+# Completions: - AWS
 _aws_zsh_completer_path="$commands[aws_zsh_completer.sh]"
 if [[ -r $_aws_zsh_completer_path ]]; then
     pyenv_regex='\.pyenv'
@@ -91,6 +92,10 @@ if [[ -r $_aws_zsh_completer_path ]]; then
     fi
     autoload bashcompinit && bashcompinit
     source $_aws_zsh_completer_path
+fi
+# Completions: kubectl
+if type kubectl  > /dev/null; then
+    source <(kubectl completion zsh)
 fi
 # Missing Completetions:
 # Curl
@@ -157,4 +162,3 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
 # up arrow to search through past commands - if text is present it will filter past commands based on text,
 # ctrl-u cleans entire line
-
