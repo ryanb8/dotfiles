@@ -103,7 +103,7 @@ fi
 
 
 
-### Fish style auto-suggestions
+# ### Fish style auto-suggestions
 # from: https://github.com/zsh-users/zsh-autosuggestions#configuration
 source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Don't use history sugggestions for cd - it probably doesn't make sense relative
@@ -162,3 +162,7 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
 # up arrow to search through past commands - if text is present it will filter past commands based on text,
 # ctrl-u cleans entire line
+
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+
+[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
