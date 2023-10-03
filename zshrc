@@ -42,6 +42,8 @@ add-zsh-hook precmd gitstatus_in_git_update
 source ~/dotfiles/dot_helpers/pyenv.prompt.zsh
 
 # Core completion things
+# Homebrew installed things may automagically pull in completion scripts
+fpath=($fpath $HOMEBREW_PREFIX/share/zsh/site-functions)
 autoload -Uz compinit promptinit
 compinit
 promptinit
