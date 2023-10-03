@@ -2,7 +2,7 @@
 
 These are my core personal dotfiles that are machine (mac/linux) agnostic. They are licensed under MIT.
 
-I use two version controlled repositories to track and manage my dotfiles. The core repository (this one) uses [my fork](https://github.com/ryanb8/dotbot) of [dotbot](https://github.com/anishathalye/dotbot/), provides core shell/R/git/etc. configurations, and is pushed to github. Each machine also has the opportunity for a second, local-only dotfiles repo (located at `~/dotfiles_local`). This allows for machine specific configurations to be set up as needed.
+I use two version controlled repositories to track and manage my dotfiles. The core repository (this one) uses [dotbot](https://github.com/anishathalye/dotbot/), provides core shell/R/git/etc. configurations, and is pushed to github. Each machine also has the opportunity for a second, local-only dotfiles repo (located at `~/dotfiles_local`). This allows for machine specific configurations to be set up as needed.
 
 The files from this repository are symlinked to the key files in my home directory. The files in the `dotfile_local` directory are sourced as needed by the profiles this directory - typically they mainly set paths and other local system things.
 
