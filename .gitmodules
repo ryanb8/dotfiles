@@ -1,6 +1,7 @@
 [submodule "dotbot"]
 	path = dotbot
-	url = https://github.com/ryanb8/dotbot
+	url = https://github.com/anishathalye/dotbot.git
+	ignore = dirty
 [submodule "dot_helpers/gitstatus"]
 	path = dot_helpers/gitstatus
 	url = https://github.com/romkatv/gitstatus.git
