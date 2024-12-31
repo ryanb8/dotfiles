@@ -1,4 +1,6 @@
-# Local profile before core
+##############################
+# Source local before files
+##############################
 if [[ -f ~/dotfiles_local/generic_shell_before.sh ]]; then
     source ~/dotfiles_local/generic_shell_before.sh
 fi
@@ -7,12 +9,23 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
     source ~/dotfiles_local/zshrc_before.zsh
 fi
 
-## lazy load nvm
-if [[ ${USE_NVM_LAZY_LOAD-true} == 'true' ]]; then
-    export NVM_LAZY_LOAD=true
-    export NVM_COMPLETION=true
-    source ~/.dotfiles/dot_helpers/zsh-nvm/zsh-nvm.plugin.zsh
+##############################
+# Common tools & Settings
+##############################
+## FNM setup
+if command -v fnm >/dev/null; then
+    eval "$(fnm env --use-on-cd)"
 fi
+
+## set up direnv
+## https://github.com/direnv/direnv
+## I prefer this to shawdowenv on my local machine
+if command -v version >/dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
+# Homebrew's chruby
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
 
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
@@ -23,11 +36,18 @@ source ~/.dotfiles/dot_helpers/zkbd.zsh
 # use cd -<NUM> to go back to the NUM prior directory
 source ~/.dotfiles/dot_helpers/dirs.zsh
 
-# Git Setup
+
+
+
+##############################
+# Git + Prompt Setup
+##############################
 export GIT_EDITOR=vim
+export GPG_TTY=$(tty)
 source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
 zstyle ':completion:*:*:git:*' script ~/.dotfiles/dot_helpers/git-completion.bash
-fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions)
+mkdir -p ~/.dotfiles/dot_helpers/jit_completion_helpers
+fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions ~/.dotfiles/dot_helpers/jit_completion_helpers)
 function gitstatus_in_git_update() {
     typeset -g GITSTATUS_IN_GIT='|'
 
@@ -38,15 +58,20 @@ function gitstatus_in_git_update() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd gitstatus_in_git_update
 
-# Additional Prompt Utils
-source ~/dotfiles/dot_helpers/pyenv.prompt.zsh
+# TO DELETE???
+# # Additional Prompt Utils
+# source ~/dotfiles/dot_helpers/pyenv.prompt.zsh
 
-# Core completion things
+# PROMPT='$PYENV_PROMPT'"%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
+PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
+
+
+##############################
+# Completions - General
+##############################
 # Homebrew installed things may automagically pull in completion scripts
 fpath=($fpath $HOMEBREW_PREFIX/share/zsh/site-functions)
 autoload -Uz compinit promptinit
-compinit
-promptinit
 
 # Enable Auto- Rehash
 # i.e. find new executables in path automatically
@@ -63,7 +88,12 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 #source ~/dotfiles/dot_helpers/LS_COLORS/LS_COLORS
 # Double tab gives completion menu
 zstyle ':completion:*' menu select
-### Setup fzf:
+
+
+##############################
+# Completions - Specific Tools
+##############################
+# fzf
 if ! type fzf  > /dev/null; then
     echo "fzf not found - install from https://github.com/junegunn/fzf if desired"
 else
@@ -85,7 +115,9 @@ else
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
     fi
 fi
-# Completions: - AWS
+
+# aws
+# TODO: This is likely out-of-date. Hvaen't used AWS in ~4 years.
 _aws_zsh_completer_path="$commands[aws_zsh_completer.sh]"
 if [[ -r $_aws_zsh_completer_path ]]; then
     pyenv_regex='\.pyenv'
@@ -95,17 +127,31 @@ if [[ -r $_aws_zsh_completer_path ]]; then
     autoload bashcompinit && bashcompinit
     source $_aws_zsh_completer_path
 fi
-# Completions: kubectl
+
+# kubectl
 if type kubectl  > /dev/null; then
     source <(kubectl completion zsh)
 fi
-# Missing Completetions:
-# Curl
-# docker?
+
+# podman
+if type podman > /dev/null; then
+    mkdir -p "${fpath[1]}/jit_completion_helpers"
+    podman_completion_file="${fpath[1]}/jit_completion_helpers/_podman"
+    if [[ ! -f "$podman_completion_file" ]]; then
+        podman completion -f "$podman_completion_file" zsh
+    fi
+fi
+
+##############################
+# Completions - Load em
+##############################
+compinit
+promptinit
 
 
-
-# ### Fish style auto-suggestions
+##############################
+# Fish style autosuggestions, highlighting, search
+##############################
 # from: https://github.com/zsh-users/zsh-autosuggestions#configuration
 source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
 # Don't use history sugggestions for cd - it probably doesn't make sense relative
@@ -113,18 +159,50 @@ source ~/.dotfiles/dot_helpers/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *)"
 # Don't use Autosuggest for git commands.
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
+# Fish style syntax highlighting
+# from: https://github.com/zsh-users/zsh-syntax-highlighting
+# NOTE that this MUST be the last command in the zshrc (techincally the last zle hook)
+source ~/.dotfiles/dot_helpers/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Fish style search via up and down
+# Uses: https://github.com/zsh-users/zsh-history-substring-search
+# Should be loaded afer syntax-highlighting
+source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+[[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"    history-substring-search-up
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}"  history-substring-search-down
+
+# TODO - why are we overriding the keybindings from zkbd.zsh? Are we?
+
+# right arrow or end to accept auto suggestion
+# tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
+# up arrow to search through past commands - if text is present it will filter past commands based on text,
+# ctrl-u cleans entire line
 
 
-# Aliases - Platform specific ones are within if blocks
+##############################
+# Tweaks
+##############################
+
+# Ensure path is unique (no dupes)
+typeset -U PATH path
+
+
+##############################
+# Shared Aliases
+##############################
+# Aliases - Platform specific ones are within if blocks in their files
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
 
+
+
+##############################
+# Report and setup enviornment
+##############################
 # Report on hot keys + functionality
 echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
 
-# My gitstaut prompt has some minor personal adjustments
-
-PROMPT='$PYENV_PROMPT'"%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
 
 # Inject secrets from secrets file
 echo 'Attempting to read secrets from `~/.secrets`'
@@ -136,8 +214,10 @@ else
     echo "No secrets imported - no file ~/.secrets exists"
 fi
 
-# Ensure path is unique (no dupes)
-typeset -U PATH path
+
+##############################
+# Source local after files
+##############################
 
 if [[ -f ~/dotfiles_local/zshrc_after.zsh ]]; then
     source ~/dotfiles_local/zshrc_after.zsh
@@ -147,24 +227,10 @@ if [[ -f ~/dotfiles_local/generic_shell_after.sh ]]; then
     source ~/dotfiles_local/generic_shell_after.sh
 fi
 
-# Fish style syntax highlighting
-# from: https://github.com/zsh-users/zsh-syntax-highlighting
-# NOTE that this MUST be the last command in the zshrc (techincally the last zle hook)
-source ~/.dotfiles/dot_helpers/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#######
+# things that need to be at the VERY end
+#######
 
-# Fish style search via up and down
-# Uses: https://github.com/zsh-users/zsh-history-substring-search
-# Must be loaded after highlighting per ^^^
-source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-[[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"    history-substring-search-up
-[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}"  history-substring-search-down
-
-# right arrow or end to accept auto suggestion
-# tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
-# up arrow to search through past commands - if text is present it will filter past commands based on text,
-# ctrl-u cleans entire line
-
-[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
-
+# Set homebrew envs as needed
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+

@@ -8,3 +8,5 @@ secrets
 env
 .DS_Store
 .vscode
+dot_helpers/jit_completion_helpers/*
+
