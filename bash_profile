@@ -23,7 +23,7 @@ reset="\[\033[0m\]"
 source ~/.dot_helpers/git-prompt.sh
 export GIT_PS1_SHOWDIRTYSTATE=1
 
-source ~/.dot_helpers/pyenv.prompt.sh
+# source ~/.dot_helpers/pyenv.prompt.sh
 
 # -------
 # Prompt & Terminal;
@@ -31,7 +31,8 @@ source ~/.dot_helpers/pyenv.prompt.sh
 # '\u' adds the name of the current user to the prompt
 # '\$(__git_ps1)' adds git-related stuff
 # '\W' adds the name of the current directory
-export PS1="$(PYENV_PROMPT)$purple\u$green\$(__git_ps1)$blue \W $ $reset"
+# export PS1="$(PYENV_PROMPT)$purple\u$green\$(__git_ps1)$blue \W $ $reset"
+export PS1="$purple\u$green\$(__git_ps1)$blue \W $ $reset"
 export PS2="| =>"
 
 # add colors to all lines

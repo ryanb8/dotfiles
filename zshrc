@@ -116,18 +116,6 @@ else
     fi
 fi
 
-# aws
-# TODO: This is likely out-of-date. Hvaen't used AWS in ~4 years.
-_aws_zsh_completer_path="$commands[aws_zsh_completer.sh]"
-if [[ -r $_aws_zsh_completer_path ]]; then
-    pyenv_regex='\.pyenv'
-    if [[ "$_aws_zsh_completer_path" =~ .*"$pyenv_regex".* ]]; then
-        _aws_zsh_completer_path=$(pyenv prefix)/bin/aws_zsh_completer.sh
-    fi
-    autoload bashcompinit && bashcompinit
-    source $_aws_zsh_completer_path
-fi
-
 # kubectl
 if type kubectl  > /dev/null; then
     source <(kubectl completion zsh)
