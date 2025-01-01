@@ -13,10 +13,9 @@ fi
 # Path Tweaks
 ##############################
 
-# # path cleanup
-if [[ -d "$HOME/.local/bin" ]]; then
-    export PATH="$PATH:$HOME/.local/bin"
-fi
+# add a local bin folder if needed
+mkdir -p "$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # Ensure path is unique (no dupes)
 typeset -U PATH path
@@ -147,7 +146,6 @@ fi
 
 # uv
 if type uv > /dev/null; then
-    echo "In uv"
     source <(uv generate-shell-completion zsh)
 fi
 
