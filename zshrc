@@ -10,6 +10,18 @@ if [[ -f ~/dotfiles_local/zshrc_before.zsh ]]; then
 fi
 
 ##############################
+# Path Tweaks
+##############################
+
+# # path cleanup
+if [[ -d "$HOME/.local/bin" ]]; then
+    export PATH="$PATH:$HOME/.local/bin"
+fi
+
+# Ensure path is unique (no dupes)
+typeset -U PATH path
+
+##############################
 # Common tools & Settings
 ##############################
 ## FNM setup
@@ -72,6 +84,7 @@ PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ 
 # Homebrew installed things may automagically pull in completion scripts
 fpath=($fpath $HOMEBREW_PREFIX/share/zsh/site-functions)
 autoload -Uz compinit promptinit
+compinit
 
 # Enable Auto- Rehash
 # i.e. find new executables in path automatically
@@ -117,12 +130,14 @@ else
 fi
 
 # kubectl
-if type kubectl  > /dev/null; then
+if type kubectl > /dev/null; then
+    echo "Installing kubectl"
     source <(kubectl completion zsh)
 fi
 
 # podman
 if type podman > /dev/null; then
+    echo "Installing podman"
     mkdir -p "${fpath[1]}/jit_completion_helpers"
     podman_completion_file="${fpath[1]}/jit_completion_helpers/_podman"
     if [[ ! -f "$podman_completion_file" ]]; then
@@ -130,12 +145,11 @@ if type podman > /dev/null; then
     fi
 fi
 
-##############################
-# Completions - Load em
-##############################
-compinit
-promptinit
-
+# uv
+if type uv > /dev/null; then
+    echo "In uv"
+    source <(uv generate-shell-completion zsh)
+fi
 
 ##############################
 # Fish style autosuggestions, highlighting, search
@@ -166,15 +180,6 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
 # up arrow to search through past commands - if text is present it will filter past commands based on text,
 # ctrl-u cleans entire line
-
-
-##############################
-# Tweaks
-##############################
-
-# Ensure path is unique (no dupes)
-typeset -U PATH path
-
 
 ##############################
 # Shared Aliases
