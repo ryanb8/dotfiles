@@ -130,13 +130,13 @@ fi
 
 # kubectl
 if type kubectl > /dev/null; then
-    echo "Installing kubectl"
+    # echo "Installing kubectl"
     source <(kubectl completion zsh)
 fi
 
 # podman
 if type podman > /dev/null; then
-    echo "Installing podman"
+    # echo "Installing podman"
     mkdir -p "${fpath[1]}/jit_completion_helpers"
     podman_completion_file="${fpath[1]}/jit_completion_helpers/_podman"
     if [[ ! -f "$podman_completion_file" ]]; then
