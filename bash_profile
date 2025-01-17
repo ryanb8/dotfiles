@@ -12,7 +12,7 @@ fi
 ### ----
 # git
 ### ----
-export GIT_EDITOR=vim
+export GIT_EDITOR=hx
 source ~/.dot_helpers/git-completion.bash
 
 # setup for git command prompt

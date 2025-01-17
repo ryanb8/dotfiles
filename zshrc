@@ -53,7 +53,7 @@ source ~/.dotfiles/dot_helpers/dirs.zsh
 ##############################
 # Git + Prompt Setup
 ##############################
-export GIT_EDITOR=vim
+export GIT_EDITOR=hx
 export GPG_TTY=$(tty)
 source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
 zstyle ':completion:*:*:git:*' script ~/.dotfiles/dot_helpers/git-completion.bash
