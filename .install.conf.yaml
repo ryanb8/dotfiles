@@ -16,6 +16,15 @@
     ~/.dot_helpers:
       glob: true
       path: dot_helpers/*
+    ~/.config/helix/config.toml:
+      create: true
+      path: config/helix/config.toml
+    ~/.config/kitty/current-theme.conf:
+      create: true
+      path: config/kitty/current-theme.conf
+    ~/.config/kitty/kitty.conf:
+      create: true
+      path: config/kitty/kitty.conf
 
 
 - shell:
