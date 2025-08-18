@@ -145,10 +145,10 @@ fi
 
 # uv
 if type uv > /dev/null; then
-    source <(uv generate-shell-completion zsh)
+    source <(uv --generate-shell-completion zsh)
 fi
 if type uvx > /dev/null; then
-    source <(uvx generate-shell-completion zsh)
+    source <(uvx --generate-shell-completion zsh)
 fi
 
 ##############################
