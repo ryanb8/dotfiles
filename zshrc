@@ -151,6 +151,11 @@ if type uvx > /dev/null; then
     source <(uvx --generate-shell-completion zsh)
 fi
 
+# fnm
+if type fnm > /dev/null; then
+    source <(fnm completions --shell zsh)
+fi
+
 ##############################
 # Fish style autosuggestions, highlighting, search
 ##############################
