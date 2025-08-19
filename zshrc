@@ -25,7 +25,7 @@ typeset -U PATH path
 ##############################
 ## FNM setup
 if command -v fnm >/dev/null; then
-    eval "$(fnm env --use-on-cd)"
+    eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
 ## set up direnv
@@ -230,5 +230,21 @@ fi
 #######
 
 # Set homebrew envs as needed
+# homebrew prepends
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 
+showpathfn() {
+    echo "$PATH" | tr ':' '\n' | nl -w2 -s'. '
+}
+alias showpath=showpathfn
+
+showallpathvals=true
+if [[ "$showallpathvals" == true ]]; then
+    echo ""
+    echo "All path values are:"
+    showpath
+    echo "Toggle this off in the zshrc if desired"
+    echo ""
+else
+    echo "Toggle on showpaths in zshrc to get list of path on load"
+fi
