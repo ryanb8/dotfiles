@@ -31,7 +31,11 @@ fi
 ## set up direnv
 ## https://github.com/direnv/direnv
 ## I prefer this to shawdowenv on my local machine
-if command -v version >/dev/null; then
+## I usually clone all my repos to `~/src/<github|gitlab>/<organization>/<repo>` whitelist repos I own and repos owned by any orgs I really trust with something like the following toml in ~/.config/direnv/direnv.toml
+## > [whitelist]
+## > prefix = ["/Users/ryan/github/src/my-employer", "/Users/ryan/src/github/ryanb8"]
+## Otherwise you have to run `direnv allow path/to/directory` for it load that directory's .envrc file - just once
+if command -v direnv >/dev/null; then
     eval "$(direnv hook zsh)"
 fi
 
