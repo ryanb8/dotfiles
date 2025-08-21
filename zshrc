@@ -42,6 +42,13 @@ fi
 # Homebrew's chruby
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
 
+
+## SDKman
+if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
+    export SDKMAN_DIR="$HOME/.sdkman"
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
+fi
+
 # Ensure that keybindings are set
 # Allows for using ctrl-a, ctrl-e and others
 source ~/.dotfiles/dot_helpers/zkbd.zsh
