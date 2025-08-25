@@ -167,6 +167,12 @@ if type fnm > /dev/null; then
     source <(fnm completions --shell zsh)
 fi
 
+#aws cli
+if type aws > /dev/null; then
+    complete -C "$(which aws_completer)" aws
+fi
+
+
 ##############################
 # Fish style autosuggestions, highlighting, search
 ##############################
