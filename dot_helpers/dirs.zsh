@@ -11,7 +11,8 @@ if [[ ! -f "$DIRSTACKFILE" ]]; then
 fi
 if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
     dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
-    [[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}"
+    # commented out - don't use the last dire on the stack; use whatever comes from the terminal creation program
+    # [[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}"
 fi
 chpwd_dirstack() {
     print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
