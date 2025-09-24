@@ -90,10 +90,7 @@ PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ 
 ##############################
 # Completions - General
 ##############################
-# Homebrew installed things may automagically pull in completion scripts
-fpath=($fpath $HOMEBREW_PREFIX/share/zsh/site-functions)
-autoload -Uz compinit promptinit
-compinit
+# Note, that these settings aren't actually initailzed until the VERY end of the zshrc file!
 
 # Enable Auto- Rehash
 # i.e. find new executables in path automatically
@@ -249,3 +246,12 @@ fi
 # Set homebrew envs as needed
 # homebrew prepends
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+
+
+# Homebrew installed things may automagically pull in completion scripts
+fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
+
+# Actually initialize prompt and comp
+autoload -Uz compinit promptinit
+compinit
+promptinit
