@@ -214,6 +214,7 @@ alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
 ##############################
 # Report on hot keys + functionality
 echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
+echo "RYAN TO DO - run 'helix-cheat-sheet' to see cheatsheet for using helix or view full docs at https://docs.helix-editor.com/title-page.html"
 
 
 # Inject secrets from secrets file
