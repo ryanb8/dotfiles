@@ -27,7 +27,7 @@
       path: config/kitty/kitty.conf
     ~/claude.md:
       create: true
-      path: claude.md
+      path: CLAUDE.md
 
 
 - shell:
