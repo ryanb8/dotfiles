@@ -1,4 +1,13 @@
 ##############################
+# Startup Profiling (optional)
+##############################
+# Enable with: PROFILE_STARTUP=1 zsh
+# View results at the end of startup
+if [[ -n "$PROFILE_STARTUP" ]]; then
+    zmodload zsh/zprof
+fi
+
+##############################
 # Source local before files
 ##############################
 if [[ -f ~/dotfiles_local/generic_shell_before.sh ]]; then
@@ -38,9 +47,9 @@ fi
 ## set up direnv
 ## https://github.com/direnv/direnv
 ## I prefer this to shawdowenv on my local machine
-## I usually clone all my repos to `~/src/<github|gitlab>/<organization>/<repo>` whitelist repos I own and repos owned by any orgs I really trust with something like the following toml in ~/.config/direnv/direnv.toml
+## I usually clone all my repos to `~/src/<host>/<org>/<repo>` whitelist repos I own and repos owned by any orgs I really trust with something like the following toml in ~/.config/direnv/direnv.toml
 ## > [whitelist]
-## > prefix = ["/Users/ryan/github/src/my-employer", "/Users/ryan/src/github/ryanb8"]
+## > prefix = ["/Users/ryan/src/github/my-employer", "/Users/ryan/src/github/ryanb8"]
 ## Otherwise you have to run `direnv allow path/to/directory` for it load that directory's .envrc file - just once
 if command -v direnv >/dev/null; then
     eval "$(direnv hook zsh)"
@@ -60,8 +69,7 @@ fi
 # Completion System Setup
 ##############################
 # Configure fpath with all completion sources
-mkdir -p ~/.dotfiles/dot_helpers/jit_completion_helpers
-fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions ~/.dotfiles/dot_helpers/jit_completion_helpers)
+fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions)
 # Homebrew installed things may automagically pull in completion scripts
 fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 
@@ -106,7 +114,6 @@ function gitstatus_in_git_update() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd gitstatus_in_git_update
 
-# PROMPT='$PYENV_PROMPT'"%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
 PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
 
 
@@ -122,12 +129,7 @@ fi
 
 # podman
 if type podman > /dev/null; then
-    # echo "Installing podman"
-    mkdir -p "${fpath[1]}/jit_completion_helpers"
-    podman_completion_file="${fpath[1]}/jit_completion_helpers/_podman"
-    if [[ ! -f "$podman_completion_file" ]]; then
-        podman completion -f "$podman_completion_file" zsh
-    fi
+    source <(podman completion zsh)
 fi
 
 # uv
@@ -222,12 +224,12 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # Aliases - Platform specific ones are within if blocks in their files
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
-source ~/.dotfiles/scripts/git_workflow.sh
+source ~/.dotfiles/script/git_workflow.sh
 
 
 
 ##############################
-# Report and setup enviornment
+# Report and setup environment
 ##############################
 # Report on hot keys + functionality
 echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
@@ -257,3 +259,11 @@ if [[ -f ~/dotfiles_local/generic_shell_after.sh ]]; then
     source ~/dotfiles_local/generic_shell_after.sh
 fi
 
+##############################
+# Startup Profiling Report
+##############################
+if [[ -n "$PROFILE_STARTUP" ]]; then
+    echo ""
+    echo "=== Startup Profiling Results ==="
+    zprof
+fi
