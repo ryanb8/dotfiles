@@ -1,5 +1,31 @@
 #!/usr/bin/env zsh
 
+################################################################################
+# Git Workflow Helpers
+#
+# Opinionated Git workflow tools that organize repos and worktrees in a
+# consistent directory structure: ~/src/<host>/<org>/<repo>
+#
+# Main Features:
+#
+# - gclone / git clone
+#   Auto-organizes cloned repos into ~/src/<host>/<org>/<repo> structure.
+#   Works with both SSH and HTTPS URLs. Overrides standard git clone behavior
+#   (use --run-raw-clone flag to bypass if needed).
+#
+# - gwt-new
+#   Creates new worktrees in organized structure under
+#   ~/src/<host>/<org>/worktrees/<repo>/<worktree-name>
+#
+# - gwt-list
+#   Lists all worktrees for the current repository with branch info.
+#
+# - cdwt
+#   Navigate to worktrees by name with tab completion.
+#
+# Run any command without arguments to see detailed usage help.
+################################################################################
+
 # Git Clone with organized structure
 gclone() {
     local url="$1"
