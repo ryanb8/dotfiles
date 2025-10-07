@@ -1,4 +1,13 @@
 ##############################
+# Startup Profiling (optional)
+##############################
+# Enable with: PROFILE_STARTUP=1 zsh
+# View results at the end of startup
+if [[ -n "$PROFILE_STARTUP" ]]; then
+    zmodload zsh/zprof
+fi
+
+##############################
 # Source local before files
 ##############################
 if [[ -f ~/dotfiles_local/generic_shell_before.sh ]]; then
@@ -21,6 +30,13 @@ export PATH="$PATH:$HOME/.local/bin"
 typeset -U PATH path
 
 ##############################
+# Homebrew Setup
+##############################
+# Set homebrew envs as needed
+# homebrew prepends to PATH, so do this early
+[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+
+##############################
 # Common tools & Settings
 ##############################
 ## FNM setup
@@ -31,9 +47,9 @@ fi
 ## set up direnv
 ## https://github.com/direnv/direnv
 ## I prefer this to shawdowenv on my local machine
-## I usually clone all my repos to `~/src/<github|gitlab>/<organization>/<repo>` whitelist repos I own and repos owned by any orgs I really trust with something like the following toml in ~/.config/direnv/direnv.toml
+## I usually clone all my repos to `~/src/<host>/<org>/<repo>` whitelist repos I own and repos owned by any orgs I really trust with something like the following toml in ~/.config/direnv/direnv.toml
 ## > [whitelist]
-## > prefix = ["/Users/ryan/github/src/my-employer", "/Users/ryan/src/github/ryanb8"]
+## > prefix = ["/Users/ryan/src/github/my-employer", "/Users/ryan/src/github/ryanb8"]
 ## Otherwise you have to run `direnv allow path/to/directory` for it load that directory's .envrc file - just once
 if command -v direnv >/dev/null; then
     eval "$(direnv hook zsh)"
@@ -49,50 +65,23 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
-# Ensure that keybindings are set
-# Allows for using ctrl-a, ctrl-e and others
-source ~/.dotfiles/dot_helpers/zkbd.zsh
+##############################
+# Completion System Setup
+##############################
+# Configure fpath with all completion sources
+fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions)
+# Homebrew installed things may automagically pull in completion scripts
+fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 
-# Enable dirstack
-# use dirs -v to see recent directories
-# use cd -<NUM> to go back to the NUM prior directory
-source ~/.dotfiles/dot_helpers/dirs.zsh
-
-
-
+# Initialize prompt and completion system
+autoload -Uz compinit promptinit
+compinit
+promptinit
 
 ##############################
-# Git + Prompt Setup
+# Completions - General Styles
 ##############################
-export GIT_EDITOR=hx
-export GPG_TTY=$(tty)
-source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
-mkdir -p ~/.dotfiles/dot_helpers/jit_completion_helpers
-fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions ~/.dotfiles/dot_helpers/jit_completion_helpers)
-function gitstatus_in_git_update() {
-    typeset -g GITSTATUS_IN_GIT='|'
-
-    if [ $GITSTATUS_PROMPT_LEN -eq 0 ]; then
-        GITSTATUS_IN_GIT=''
-    fi
-}
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd gitstatus_in_git_update
-
-# TO DELETE???
-# # Additional Prompt Utils
-# source ~/dotfiles/dot_helpers/pyenv.prompt.zsh
-
-# PROMPT='$PYENV_PROMPT'"%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
-PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
-
-
-##############################
-# Completions - General
-##############################
-# Note, that these settings aren't actually initailzed until the VERY end of the zshrc file!
-
-# Enable Auto- Rehash
+# Enable Auto-Rehash
 # i.e. find new executables in path automatically
 zstyle ':completion:*' rehash true
 
@@ -110,30 +99,27 @@ zstyle ':completion:*' menu select
 
 
 ##############################
+# Git + Prompt Setup
+##############################
+export GIT_EDITOR=hx
+export GPG_TTY=$(tty)
+source ~/.dotfiles/dot_helpers/gitstatus/gitstatus.prompt.zsh
+function gitstatus_in_git_update() {
+    typeset -g GITSTATUS_IN_GIT='|'
+
+    if [ $GITSTATUS_PROMPT_LEN -eq 0 ]; then
+        GITSTATUS_IN_GIT=''
+    fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd gitstatus_in_git_update
+
+PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
+
+
+##############################
 # Completions - Specific Tools
 ##############################
-# fzf
-if ! type fzf  > /dev/null; then
-    echo "fzf not found - install from https://github.com/junegunn/fzf if desired"
-else
-    # if the shell is interactive, turn this on
-    [[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
-    ### Use fzf for completion menus
-    # Must be before zsh-autosuggestions or other
-    source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
-    bindkey '^F' toggle-fzf-tab  # Toggel fzf-tab on abd off with ctlr-f
-    toggle-fzf-tab   # default to off
-    # I want to be able to tab once and have it auto-complete THEN tab opens up fzf stuff
-    echo "fzf-tab is set to off - toggle with ctrl-f"
-    # zstyle ":completion:*:git-checkout:*" sort false
-    zstyle ':completion:*:descriptions' format '[%d]'
-    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-    if ! type exa  > /dev/null; then
-        echo "exa not found - install from https://github.com/ogham/exa for full fzf functionality"
-    else
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-    fi
-fi
 
 # kubectl
 if type kubectl > /dev/null; then
@@ -143,12 +129,7 @@ fi
 
 # podman
 if type podman > /dev/null; then
-    # echo "Installing podman"
-    mkdir -p "${fpath[1]}/jit_completion_helpers"
-    podman_completion_file="${fpath[1]}/jit_completion_helpers/_podman"
-    if [[ ! -f "$podman_completion_file" ]]; then
-        podman completion -f "$podman_completion_file" zsh
-    fi
+    source <(podman completion zsh)
 fi
 
 # uv
@@ -167,6 +148,45 @@ fi
 #aws cli
 if type aws > /dev/null; then
     complete -C "$(which aws_completer)" aws
+fi
+
+# fzf - Must be after compinit is called
+if ! type fzf  > /dev/null; then
+    echo "fzf not found - install from https://github.com/junegunn/fzf if desired"
+else
+    ### Use fzf for completion menus
+    # fzf-tab MUST be sourced after compinit
+    source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
+    bindkey '^F' toggle-fzf-tab  # Toggle fzf-tab on and off with ctrl-f
+    toggle-fzf-tab   # default to off
+    # I want to be able to tab once and have it auto-complete THEN tab opens up fzf stuff
+    echo "fzf-tab is set to off - toggle with ctrl-f"
+    # zstyle ":completion:*:git-checkout:*" sort false
+    zstyle ':completion:*:descriptions' format '[%d]'
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+    if ! type exa  > /dev/null; then
+        echo "exa not found - install from https://github.com/ogham/exa for full fzf functionality"
+    else
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+    fi
+fi
+
+##############################
+# Interactive Features
+##############################
+# Ensure that keybindings are set
+# Allows for using ctrl-a, ctrl-e and others
+source ~/.dotfiles/dot_helpers/zkbd.zsh
+
+# Enable dirstack
+# use dirs -v to see recent directories
+# use cd -<NUM> to go back to the NUM prior directory
+source ~/.dotfiles/dot_helpers/dirs.zsh
+
+# fzf key bindings (separate from fzf-tab)
+if type fzf > /dev/null; then
+    # if the shell is interactive, turn this on
+    [[ $- == *i* ]] && source ~/.dotfiles/dot_helpers/fzf-key-bindings.zsh 2> /dev/null
 fi
 
 
@@ -193,8 +213,6 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 [[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"    history-substring-search-up
 [[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}"  history-substring-search-down
 
-# TODO - why are we overriding the keybindings from zkbd.zsh? Are we?
-
 # right arrow or end to accept auto suggestion
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
 # up arrow to search through past commands - if text is present it will filter past commands based on text,
@@ -206,11 +224,12 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # Aliases - Platform specific ones are within if blocks in their files
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
+source ~/.dotfiles/script/git_workflow.sh
 
 
 
 ##############################
-# Report and setup enviornment
+# Report and setup environment
 ##############################
 # Report on hot keys + functionality
 echo "Run 'zsh-hotkeys' to see overview of configured functionality + shortcuts"
@@ -240,19 +259,11 @@ if [[ -f ~/dotfiles_local/generic_shell_after.sh ]]; then
     source ~/dotfiles_local/generic_shell_after.sh
 fi
 
-#######
-# things that need to be at the VERY end
-#######
-
-# Set homebrew envs as needed
-# homebrew prepends
-[[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
-
-
-# Homebrew installed things may automagically pull in completion scripts
-fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
-
-# Actually initialize prompt and comp
-autoload -Uz compinit promptinit
-compinit
-promptinit
+##############################
+# Startup Profiling Report
+##############################
+if [[ -n "$PROFILE_STARTUP" ]]; then
+    echo ""
+    echo "=== Startup Profiling Results ==="
+    zprof
+fi
