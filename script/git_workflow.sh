@@ -49,12 +49,12 @@ gclone() {
     local host org repo
 
     # SSH format: git@github.com:org/repo.git
-    if [[ "$url" =~ ^git@([^:]+):(.+)/([^/]+)(\.git)?$ ]]; then
+    if [[ "$url" =~ ^git@([^:]+):([^/]+)/([^/]+)(\.git)?$ ]]; then
         host="${match[1]}"
         org="${match[2]}"
         repo="${match[3]}"
     # HTTPS format: https://github.com/org/repo.git
-    elif [[ "$url" =~ ^https?://([^/]+)/(.+)/([^/]+)(\.git)?$ ]]; then
+    elif [[ "$url" =~ ^https?://([^/]+)/([^/]+)/([^/]+)(\.git)?$ ]]; then
         host="${match[1]}"
         org="${match[2]}"
         repo="${match[3]}"
