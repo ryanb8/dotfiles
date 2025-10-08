@@ -93,7 +93,8 @@ gclone() {
 
     # Clone the repo with any additional options
     echo "Cloning to: $target_dir"
-    git clone "$@" "$url" "$target_dir"
+    command git clone "$url" "$target_dir" "$@"
+    cd "$target_dir"
 }
 alias gitclone=gclone
 
