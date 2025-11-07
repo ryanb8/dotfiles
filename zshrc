@@ -153,10 +153,9 @@ fi
 if type gcloud > /dev/null; then
     local gcloud_sdk_install_path=$(gcloud info --format="value(installation.sdk_root)")
     source $gcloud_sdk_install_path/completion.zsh.inc
-    ## gcloud install docs suggest also sourcing $google-cloud-sdk/path.zsh.inc
-    ## This just adds the $gcloud_sdk_install_path/bin to the path, but homebrew already already
-    ## aliases bq, gcloud, and gsutil to it's path
-    ## This is why our `gcloud > /dev/null` check works!
+    # homebrew auto-links gcloud, gsutil, and bq to the /opt/homebrew/bin folder
+    # this path supports automatic linking for other gcloud components (like cbt)
+    PATH="$PATH:$gcloud_sdk_install_path/bin"
 fi
 
 # fzf - via brew
