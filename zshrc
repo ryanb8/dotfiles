@@ -121,18 +121,17 @@ PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ 
 # Completions - Specific Tools
 ##############################
 
-# kubectl
+# kubectl - via brew
 if type kubectl > /dev/null; then
-    # echo "Installing kubectl"
     source <(kubectl completion zsh)
 fi
 
-# podman
+# podman - via brew
 if type podman > /dev/null; then
     source <(podman completion zsh)
 fi
 
-# uv
+# uv - manual install
 if type uv > /dev/null; then
     source <(uv --generate-shell-completion zsh)
 fi
@@ -140,20 +139,31 @@ if type uvx > /dev/null; then
     source <(uvx --generate-shell-completion zsh)
 fi
 
-# fnm
+# fnm - via brew
 if type fnm > /dev/null; then
     source <(fnm completions --shell zsh)
 fi
 
-#aws cli
+#aws cli - via brew
 if type aws > /dev/null; then
     complete -C "$(which aws_completer)" aws
 fi
 
-# fzf - Must be after compinit is called
-if ! type fzf  > /dev/null; then
-    echo "fzf not found - install from https://github.com/junegunn/fzf if desired"
-else
+#gcloud cli - via brew
+if type gcloud > /dev/null; then
+    local gcloud_sdk_install_path=$(gcloud info --format="value(installation.sdk_root)")
+    source $gcloud_sdk_install_path/completion.zsh.inc
+    ## gcloud install docs suggest also sourcing $google-cloud-sdk/path.zsh.inc
+    ## This just adds the $gcloud_sdk_install_path/bin to the path, but homebrew already already
+    ## aliases bq, gcloud, and gsutil to it's path
+    ## This is why our `gcloud > /dev/null` check works!
+fi
+
+# fzf - via brew
+if type fzf  > /dev/null; then
+    ####
+    # NOTE - there's a chance this is more straightforward or automated via homebrew now...
+    ####
     ### Use fzf for completion menus
     # fzf-tab MUST be sourced after compinit
     source ~/.dotfiles/dot_helpers/fzf-tab/fzf-tab.plugin.zsh
