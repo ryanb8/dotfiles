@@ -5,6 +5,9 @@
 
 - clean: ['~']
 
+- create:
+    ~/.claude:
+
 - link:
     ~/.dotfiles: ''
     ~/.zshrc: zshrc
@@ -27,7 +30,15 @@
       path: config/kitty/kitty.conf
     ~/claude.md:
       create: true
-      path: CLAUDE.md
+      path: claude/CLAUDE.md
+    ~/.claude/commands:
+      create: true
+      glob: true
+      path: claude/commands/*
+    ~/.claude/agents:
+      create: true
+      glob: true
+      path: claude/subagents/*
 
 
 - shell:
