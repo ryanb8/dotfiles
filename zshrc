@@ -231,6 +231,7 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 # Shared Aliases
 ##############################
 # Aliases - Platform specific ones are within if blocks in their files
+source ~/.dotfiles/script/cd_aliasing.sh
 source ~/.dotfiles/dot_helpers/mac_aliases.sh
 alias zsh-hotkeys='less ~/.dotfiles/dot_helpers/zsh_dotfiles_functionality.txt'
 source ~/.dotfiles/script/git_workflow.sh
