@@ -28,9 +28,15 @@
     ~/.config/kitty/kitty.conf:
       create: true
       path: config/kitty/kitty.conf
-    ~/claude.md:
+    ~/.claude/CLAUDE.md:
       create: true
-      path: claude/CLAUDE.md
+      path: claude/agents.md
+    ~/AGENTS.md:
+      create: true
+      path: claude/agents.md
+    ~/.kilocode/rules/AGENTS.md:
+      create: true
+      path: claude/agents.md
     ~/.claude/commands:
       create: true
       glob: true
