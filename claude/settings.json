@@ -1,0 +1,32 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "printf \"\\033[0;35m%s\\033[0;32m%s\\033[0;34m %s \\033[0m\" \"$(whoami)\" \"$(git branch --show-current 2>/dev/null | sed 's/^/ (/' | sed 's/$/)/' || echo '')\" \"$(basename \\\"$(pwd)\\\")\""
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.pydantic.dev)",
+      "Bash(tree:*)",
+      "Bash(rf:*)",
+      "Bash(fd:*)",
+      "Bash(find:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Read(./env.example)",
+      "Read(./env.infra)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.aws/**)",
+      "Read(./**/.ssh/**)",
+      "Read(./**/credentials/**)",
+      "Read(./**/secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)"
+    ],
+    "ask": [
+      "Bash(rm:*)"
+    ]
+  }
+}

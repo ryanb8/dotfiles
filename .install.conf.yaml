@@ -31,6 +31,9 @@
     ~/.claude/CLAUDE.md:
       create: true
       path: claude/agents.md
+    ~/.claude/settings.json:
+      create: true
+      path: claude/settings.json
     ~/AGENTS.md:
       create: true
       path: claude/agents.md
