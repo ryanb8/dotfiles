@@ -1,8 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "printf \"\\033[0;35m%s\\033[0;32m%s\\033[0;34m %s \\033[0m\" \"$(whoami)\" \"$(git branch --show-current 2>/dev/null | sed 's/^/ (/' | sed 's/$/)/' || echo '')\" \"$(basename \\\"$(pwd)\\\")\""
-  },
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.pydantic.dev)",
@@ -28,5 +24,9 @@
     "ask": [
       "Bash(rm:*)"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "printf \"\\033[0;35m%s\\033[0;32m%s\\033[0;34m %s \\033[0m\" \"$(whoami)\" \"$(git branch --show-current 2>/dev/null | sed 's/^/ (/' | sed 's/$/)/' || echo '')\" \"$(basename \\\"$(pwd)\\\")\""
   }
 }
