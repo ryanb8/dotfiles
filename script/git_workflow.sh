@@ -17,22 +17,58 @@
 #   Creates new worktrees in organized structure under
 #   ~/src/<host>/<org>/worktrees/<repo>/<worktree-name>
 #
+# - gwt-rm
+#   Removes a worktree by name. Supports --force.
+#
 # - gwt-list
 #   Lists all worktrees for the current repository with branch info.
 #
 # - cdwt
 #   Navigate to worktrees by name with tab completion.
 #
-# Run any command without arguments to see detailed usage help.
+# Run any command with --help to see usage and related commands.
 ################################################################################
+
+# Shared help footer for all git workflow commands
+_gwt-related-commands() {
+    echo ""
+    echo "Related commands:"
+    echo "  gclone    Clone repos into organized ~/src/<host>/<org>/<repo> structure"
+    echo "  gwt-new   Create a new worktree"
+    echo "  gwt-rm    Remove a worktree"
+    echo "  gwt-list  List worktrees for current repo"
+    echo "  cdwt      Navigate to a worktree by name"
+}
+
+# Top-level entry point for discoverability
+gwt() {
+    echo "Git workflow commands:"
+    _gwt-related-commands
+}
 
 # Git Clone with organized structure
 gclone() {
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        echo "Usage: gclone <repo_url> [git-clone-options...]"
+        echo ""
+        echo "Clones a repo into ~/src/<host>/<org>/<repo> structure."
+        echo "Also overrides 'git clone' (use --run-raw-clone to bypass)."
+        echo ""
+        echo "Examples:"
+        echo "  gclone git@github.com:org/repo.git"
+        echo "  gclone https://github.com/org/repo.git"
+        echo "  git clone git@github.com:org/repo.git          # same as gclone"
+        echo "  git clone --run-raw-clone git@github.com:o/r   # bypass"
+        _gwt-related-commands
+        return 0
+    fi
+
     local url="$1"
     shift  # Remove URL from args, rest are git clone options
 
     if [[ -z "$url" ]]; then
         echo "Usage: gclone <repo_url> [git-clone-options...]"
+        echo "       gclone --help for more info"
         return 1
     fi
 
@@ -165,12 +201,10 @@ compdef _git_wrapper git
 
 # Create a new worktree for the current repo.
 gwt-new() {
-    local worktree_name="$1"
-    local branch_name="${2:-$worktree_name}"  # Default to worktree name
-    local base_branch="${3:-HEAD}"             # Default to current branch
-
-    if [[ -z "$worktree_name" ]]; then
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
         echo "Usage: gwt-new <worktree-name> [new-branch] [base-branch]"
+        echo ""
+        echo "Creates a new worktree under ~/src/<host>/<org>/worktrees/<repo>/."
         echo ""
         echo "Defaults:"
         echo "  new-branch:  same as worktree-name"
@@ -180,6 +214,17 @@ gwt-new() {
         echo "  gwt-new my-feature                 # Worktree + branch 'my-feature' from current"
         echo "  gwt-new wt-dir my-branch           # Worktree 'wt-dir', branch 'my-branch'"
         echo "  gwt-new wt-dir my-branch main      # Explicitly base on 'main'"
+        _gwt-related-commands
+        return 0
+    fi
+
+    local worktree_name="$1"
+    local branch_name="${2:-$worktree_name}"  # Default to worktree name
+    local base_branch="${3:-HEAD}"             # Default to current branch
+
+    if [[ -z "$worktree_name" ]]; then
+        echo "Usage: gwt-new <worktree-name> [new-branch] [base-branch]"
+        echo "       gwt-new --help for more info"
         return 1
     fi
 
@@ -225,6 +270,14 @@ gwt-new() {
 
 # List worktrees for current repo
 gwt-list() {
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        echo "Usage: gwt-list"
+        echo ""
+        echo "Lists all worktrees for the current repository with branch info."
+        _gwt-related-commands
+        return 0
+    fi
+
     local repo_root
     repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
 
@@ -260,12 +313,109 @@ gwt-list() {
     '
 }
 
+# Remove a worktree
+gwt-rm() {
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        echo "Usage: gwt-rm <worktree-name> [--force]"
+        echo ""
+        echo "Removes a worktree by name or path. Tab completion supported."
+        echo "Use --force to remove even with uncommitted changes."
+        _gwt-related-commands
+        return 0
+    fi
+
+    local force=false
+    local target=""
+
+    for arg in "$@"; do
+        if [[ "$arg" == "--force" || "$arg" == "-f" ]]; then
+            force=true
+        else
+            target="$arg"
+        fi
+    done
+
+    if [[ -z "$target" ]]; then
+        echo "Usage: gwt-rm <worktree-name> [--force]"
+        echo "       gwt-rm --help for more info"
+        return 1
+    fi
+
+    local repo_root
+    repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+
+    if [[ -z "$repo_root" ]]; then
+        echo "Error: Not inside a git repository"
+        return 1
+    fi
+
+    local worktree_path="$target"
+    if [[ "$target" != */* ]]; then
+        # Resolve basename to path using git worktree list
+        local -a matches
+        matches=($(git worktree list --porcelain | awk -v target="$target" '
+            /^worktree / {
+                path = substr($0, 10)
+                n = split(path, parts, "/")
+                name = parts[n]
+                if (name == target) {
+                    print path
+                }
+            }
+            /^$/ { path = "" }
+        '))
+
+        if [[ ${#matches[@]} -eq 0 ]]; then
+            echo "Error: Worktree '$target' not found"
+            echo ""
+            echo "Available worktrees:"
+            gwt-list
+            return 1
+        elif [[ ${#matches[@]} -gt 1 ]]; then
+            echo "Error: Multiple worktrees named '$target' found:"
+            printf '  %s\n' "${matches[@]}"
+            return 1
+        fi
+
+        worktree_path="${matches[1]}"
+    else
+        # Full path provided — verify it's a registered worktree
+        local registered
+        registered=$(git worktree list --porcelain | awk -v path="$target" '
+            /^worktree / { if (substr($0, 10) == path) print "yes" }
+        ')
+        if [[ "$registered" != "yes" ]]; then
+            echo "Error: '$target' is not a registered worktree"
+            echo ""
+            echo "Available worktrees:"
+            gwt-list
+            return 1
+        fi
+    fi
+
+    if [[ "$force" == "true" ]]; then
+        git worktree remove --force "$worktree_path"
+    else
+        git worktree remove "$worktree_path"
+    fi
+}
+
 # Change to a worktree directory
 cdwt() {
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        echo "Usage: cdwt <worktree-name>"
+        echo ""
+        echo "Navigate to a worktree by name (tab completion supported)."
+        echo "Also accepts a full path."
+        _gwt-related-commands
+        return 0
+    fi
+
     local target="$1"
 
     if [[ -z "$target" ]]; then
         echo "Usage: cdwt <worktree-name>"
+        echo "       cdwt --help for more info"
         return 1
     fi
 
@@ -370,3 +520,4 @@ _gwt-new() {
 }
 
 compdef _gwt-new gwt-new
+compdef _cdwt gwt-rm
