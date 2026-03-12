@@ -23,7 +23,7 @@
 # - gwt-list
 #   Lists all worktrees for the current repository with branch info.
 #
-# - cdwt
+# - gwt-cd (alias: cdwt)
 #   Navigate to worktrees by name with tab completion.
 #
 # Run any command with --help to see usage and related commands.
@@ -37,7 +37,7 @@ _gwt-related-commands() {
     echo "  gwt-new   Create a new worktree"
     echo "  gwt-rm    Remove a worktree"
     echo "  gwt-list  List worktrees for current repo"
-    echo "  cdwt      Navigate to a worktree by name"
+    echo "  gwt-cd    Navigate to a worktree by name (alias: cdwt)"
 }
 
 # Top-level entry point for discoverability
@@ -401,12 +401,13 @@ gwt-rm() {
 }
 
 # Change to a worktree directory
-cdwt() {
+gwt-cd() {
     if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-        echo "Usage: cdwt <worktree-name>"
+        echo "Usage: gwt-cd <worktree-name>"
         echo ""
         echo "Navigate to a worktree by name (tab completion supported)."
         echo "Also accepts a full path."
+        echo "Alias: cdwt"
         _gwt-related-commands
         return 0
     fi
@@ -414,8 +415,8 @@ cdwt() {
     local target="$1"
 
     if [[ -z "$target" ]]; then
-        echo "Usage: cdwt <worktree-name>"
-        echo "       cdwt --help for more info"
+        echo "Usage: gwt-cd <worktree-name>"
+        echo "       gwt-cd --help for more info"
         return 1
     fi
 
@@ -467,8 +468,10 @@ cdwt() {
     fi
 }
 
-# Zsh completion for cdwt
-_cdwt() {
+alias cdwt=gwt-cd
+
+# Zsh completion for gwt-cd
+_gwt-cd() {
     local repo_root
     repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
 
@@ -490,7 +493,8 @@ _cdwt() {
     _describe 'worktree' worktrees
 }
 
-compdef _cdwt cdwt
+compdef _gwt-cd gwt-cd
+compdef _gwt-cd cdwt
 
 # Zsh completion for gwt-new
 _gwt-new() {
@@ -520,4 +524,4 @@ _gwt-new() {
 }
 
 compdef _gwt-new gwt-new
-compdef _cdwt gwt-rm
+compdef _gwt-cd gwt-rm
