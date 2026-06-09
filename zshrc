@@ -35,6 +35,8 @@ typeset -U PATH path
 # Set homebrew envs as needed
 # homebrew prepends to PATH, so do this early
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+export DYLD_LIBRARY_PATH="/opt/homebrew/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+
 
 ##############################
 # Common tools & Settings

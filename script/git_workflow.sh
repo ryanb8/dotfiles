@@ -265,7 +265,7 @@ gwt-new() {
     # Create the worktree with new branch based on base branch
     echo "Creating worktree: $worktree_dir"
     echo "New branch: $branch_name (based on $base_branch)"
-    git worktree add -b "$branch_name" "$worktree_dir" "$base_branch"
+    git worktree add -b "$branch_name" "$worktree_dir" "$base_branch" && cd "$worktree_dir"
 }
 
 # List worktrees for current repo
@@ -391,6 +391,13 @@ gwt-rm() {
             gwt-list
             return 1
         fi
+    fi
+
+    # Block removal if cwd is inside the worktree
+    if [[ "$PWD" == "$worktree_path" || "$PWD" == "$worktree_path"/* ]]; then
+        echo "Error: Can't remove worktree you're currently in: $worktree_path"
+        echo "cd out of it first, then retry."
+        return 1
     fi
 
     if [[ "$force" == "true" ]]; then
