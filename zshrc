@@ -71,7 +71,7 @@ fi
 # Completion System Setup
 ##############################
 # Configure fpath with all completion sources
-fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions)
+fpath=(~/.dotfiles/dot_helpers $fpath ~/.dotfiles/dot_helpers/zsh-completions/src ~/.dotfiles/dot_helpers/other-zsh-completions ~/.zfunc)
 # Homebrew installed things may automagically pull in completion scripts
 fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
 
@@ -117,7 +117,6 @@ autoload -Uz add-zsh-hook
 add-zsh-hook precmd gitstatus_in_git_update
 
 PROMPT="%F{13}%n%f|%F{35}%1d%f"'$GITSTATUS_IN_GIT''$GITSTATUS_PROMPT'"➤➤➤ "
-
 
 ##############################
 # Completions - Specific Tools
@@ -213,7 +212,6 @@ ZSH_AUTOSUGGEST_HISTORY_IGNORE="(cd *)"
 ZSH_AUTOSUGGEST_COMPLETION_IGNORE="(git *)"
 # Fish style syntax highlighting
 # from: https://github.com/zsh-users/zsh-syntax-highlighting
-# NOTE that this MUST be the last command in the zshrc (techincally the last zle hook)
 source ~/.dotfiles/dot_helpers/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Fish style search via up and down
@@ -278,4 +276,38 @@ if [[ -n "$PROFILE_STARTUP" ]]; then
     echo ""
     echo "=== Startup Profiling Results ==="
     zprof
+fi
+
+##############################
+# Turn on Atuin, if installed
+##############################
+atuin_bin_path=~/.atuin/bin/
+if [[ -f "$atuin_bin_path"atuin && -x "$atuin_bin_path"atuin ]]; then
+    PATH="$PATH:$atuin_bin_path"
+    # eval "$(atuin init zsh)"
+    eval "$(atuin init zsh --disable-up-arrow)"
+
+    ATUIN_UP_THRESHOLD=4   # Nth press opens the TUI
+
+    _atuin_up_n() {
+        if [[ $LASTWIDGET == _atuin_up_n ]]; then
+            (( _atuin_up_count++ ))
+        else
+            _atuin_up_count=1
+        fi
+
+        if (( _atuin_up_count >= ATUIN_UP_THRESHOLD )); then
+            _atuin_up_count=0
+            zle atuin-up-search
+        else
+            zle history-substring-search-up
+        fi
+    }
+    zle -N _atuin_up_n
+
+    bindkey '^[[A' _atuin_up_n
+    bindkey '^[OA' _atuin_up_n
+    [[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" _atuin_up_n
+
+    source <(atuin gen-completions -s zsh)
 fi

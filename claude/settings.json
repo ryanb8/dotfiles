@@ -1,4 +1,41 @@
 {
+  "effortLevel": "xhigh",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook claude-code",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ]
+  },
+  "model": "claude-fable-5[1m]",
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.pydantic.dev)",
@@ -11,6 +48,9 @@
       "Read(./env.example)",
       "Read(./env.infra)"
     ],
+    "ask": [
+      "Bash(rm:*)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
@@ -20,13 +60,10 @@
       "Read(./**/secrets/**)",
       "Read(./**/*.pem)",
       "Read(./**/*.key)"
-    ],
-    "ask": [
-      "Bash(rm:*)"
     ]
   },
   "statusLine": {
-    "type": "command",
-    "command": "printf \"\\033[0;35m%s\\033[0;32m%s\\033[0;34m %s \\033[0m\" \"$(whoami)\" \"$(git branch --show-current 2>/dev/null | sed 's/^/ (/' | sed 's/$/)/' || echo '')\" \"$(basename \\\"$(pwd)\\\")\""
+    "command": "printf \"\\033[0;35m%s\\033[0;32m%s\\033[0;34m %s \\033[0m\" \"$(whoami)\" \"$(git branch --show-current 2>/dev/null | sed 's/^/ (/' | sed 's/$/)/' || echo '')\" \"$(basename \\\"$(pwd)\\\")\"",
+    "type": "command"
   }
 }
