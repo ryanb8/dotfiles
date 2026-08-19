@@ -287,13 +287,19 @@ if [[ -f "$atuin_bin_path"atuin && -x "$atuin_bin_path"atuin ]]; then
     # eval "$(atuin init zsh)"
     eval "$(atuin init zsh --disable-up-arrow)"
 
-    ATUIN_UP_THRESHOLD=4   # Nth press opens the TUI
+    ATUIN_UP_THRESHOLD=2   # Nth press opens the TUI (empty buffer only)
 
     _atuin_up_n() {
-        if [[ $LASTWIDGET == _atuin_up_n ]]; then
+        if [[ $LASTWIDGET == (_atuin_up_n|_atuin_down_n) ]]; then
             (( _atuin_up_count++ ))
         else
             _atuin_up_count=1
+            # fresh press with text already typed: straight to the TUI, buffer as query
+            if [[ -n ${BUFFER//[[:space:]]/} ]]; then
+                _atuin_up_count=0
+                zle atuin-up-search
+                return
+            fi
         fi
 
         if (( _atuin_up_count >= ATUIN_UP_THRESHOLD )); then
