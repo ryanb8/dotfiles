@@ -224,7 +224,8 @@ source ~/.dotfiles/dot_helpers/zsh-history-substring-search/zsh-history-substrin
 
 # right arrow or end to accept auto suggestion
 # tab to show autocomplete menu, tab/shift-tab to shuffle through to autocomplete options, enter to select and close menu, / to select option and keep menu open for next option
-# up arrow to search through past commands - if text is present it will filter past commands based on text,
+# up arrow opens the atuin search TUI (fuzzy search over full history); any typed text becomes the search query. ctrl-r also opens atuin
+# down arrow searches past commands via substring match - if text is present it filters past commands based on text
 # ctrl-u cleans entire line
 
 ##############################
@@ -287,33 +288,13 @@ if [[ -f "$atuin_bin_path"atuin && -x "$atuin_bin_path"atuin ]]; then
     # eval "$(atuin init zsh)"
     eval "$(atuin init zsh --disable-up-arrow)"
 
-    ATUIN_UP_THRESHOLD=2   # Nth press opens the TUI (empty buffer only)
-
-    _atuin_up_n() {
-        if [[ $LASTWIDGET == (_atuin_up_n|_atuin_down_n) ]]; then
-            (( _atuin_up_count++ ))
-        else
-            _atuin_up_count=1
-            # fresh press with text already typed: straight to the TUI, buffer as query
-            if [[ -n ${BUFFER//[[:space:]]/} ]]; then
-                _atuin_up_count=0
-                zle atuin-up-search
-                return
-            fi
-        fi
-
-        if (( _atuin_up_count >= ATUIN_UP_THRESHOLD )); then
-            _atuin_up_count=0
-            zle atuin-up-search
-        else
-            zle history-substring-search-up
-        fi
-    }
-    zle -N _atuin_up_n
-
-    bindkey '^[[A' _atuin_up_n
-    bindkey '^[OA' _atuin_up_n
-    [[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" _atuin_up_n
+    # Up arrow opens the atuin search TUI (fuzzy over full history), using any
+    # already-typed text as the query. Ctrl-R also opens atuin. Down arrow stays
+    # on zsh-history-substring-search. Inside the TUI, Tab and Enter both paste
+    # the selected command to the prompt without running it (enter_accept=false).
+    bindkey '^[[A' atuin-up-search
+    bindkey '^[OA' atuin-up-search
+    [[ -n "${key[Up]}" ]] && bindkey -- "${key[Up]}" atuin-up-search
 
     source <(atuin gen-completions -s zsh)
 fi

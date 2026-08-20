@@ -19,6 +19,13 @@
     ~/.dot_helpers:
       glob: true
       path: dot_helpers/*
+    ~/.config/atuin/config.toml:
+      create: true
+      # atuin auto-generates a default config.toml whenever one is missing (its
+      # shell hook does this on every prompt), so a stray real file can sit in the
+      # target before deploy. force lets dotbot replace it with our symlink.
+      force: true
+      path: config/atuin/config.toml
     ~/.config/helix/config.toml:
       create: true
       path: config/helix/config.toml
