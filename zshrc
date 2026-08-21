@@ -26,6 +26,15 @@ fi
 mkdir -p "$HOME/.local/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
+# atuin - the interactive `atuin init` stays in the Atuin section at the bottom
+[[ -x ~/.atuin/bin/atuin ]] && export PATH="$PATH:$HOME/.atuin/bin"
+
+# gcloud - homebrew auto-links gcloud, gsutil, and bq into /opt/homebrew/bin;
+# this path is what makes the other components (like cbt) resolve. The
+# completion script stays in the completions section - it needs bashcompinit.
+[[ -d /opt/homebrew/share/google-cloud-sdk/bin ]] && \
+    export PATH="$PATH:/opt/homebrew/share/google-cloud-sdk/bin"
+
 # Ensure path is unique (no dupes)
 typeset -U PATH path
 
@@ -66,6 +75,18 @@ if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
     export SDKMAN_DIR="$HOME/.sdkman"
     source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
+
+##############################
+# VS Code shell-environment resolution: bail out early
+##############################
+# When VS Code is launched from Finder (not `code .`), launchd gives it only
+# /usr/bin:/bin:/usr/sbin:/sbin. It repairs that by spawning
+#   $SHELL -i -l -c '<node> -p "MARK"+JSON.stringify(process.env)+"MARK"'
+# with VSCODE_RESOLVING_ENVIRONMENT=1 set, and copying the exported environment
+# it reads back into its own process.env.
+# KEEP THIS AFTER ALL PATH CONSTRUCTION. Anything that appends to PATH below
+# this line is invisible to VS Code, and so invisible to Claude Code.
+[[ -n "$VSCODE_RESOLVING_ENVIRONMENT" ]] && return 0
 
 ##############################
 # Completion System Setup
@@ -151,12 +172,14 @@ if type aws > /dev/null; then
 fi
 
 #gcloud cli - via brew
-if type gcloud > /dev/null; then
-    local gcloud_sdk_install_path=$(gcloud info --format="value(installation.sdk_root)")
+# The sdk root is a constant, so it is hardcoded rather than read back from
+# `gcloud info --format="value(installation.sdk_root)"` - that was a Python
+# process launch (~280ms warm, seconds cold) to compute a fixed string.
+# The bin/ entry is added up in Path Tweaks; only completion happens here,
+# because completion.zsh.inc calls bashcompinit and so must follow compinit.
+gcloud_sdk_install_path=/opt/homebrew/share/google-cloud-sdk
+if [[ -r $gcloud_sdk_install_path/completion.zsh.inc ]]; then
     source $gcloud_sdk_install_path/completion.zsh.inc
-    # homebrew auto-links gcloud, gsutil, and bq to the /opt/homebrew/bin folder
-    # this path supports automatic linking for other gcloud components (like cbt)
-    PATH="$PATH:$gcloud_sdk_install_path/bin"
 fi
 
 # fzf - via brew
@@ -284,7 +307,7 @@ fi
 ##############################
 atuin_bin_path=~/.atuin/bin/
 if [[ -f "$atuin_bin_path"atuin && -x "$atuin_bin_path"atuin ]]; then
-    PATH="$PATH:$atuin_bin_path"
+    # PATH entry is added up in Path Tweaks, above the VS Code resolution guard
     # eval "$(atuin init zsh)"
     eval "$(atuin init zsh --disable-up-arrow)"
 

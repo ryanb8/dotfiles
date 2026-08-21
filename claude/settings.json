@@ -5,7 +5,7 @@
       {
         "hooks": [
           {
-            "command": "atuin hook claude-code",
+            "command": "$HOME/.atuin/bin/atuin hook claude-code",
             "type": "command"
           }
         ],
@@ -16,7 +16,7 @@
       {
         "hooks": [
           {
-            "command": "atuin hook claude-code",
+            "command": "$HOME/.atuin/bin/atuin hook claude-code",
             "type": "command"
           }
         ],
@@ -27,7 +27,7 @@
       {
         "hooks": [
           {
-            "command": "atuin hook claude-code",
+            "command": "$HOME/.atuin/bin/atuin hook claude-code",
             "type": "command"
           }
         ],
@@ -35,7 +35,6 @@
       }
     ]
   },
-  "model": "claude-fable-5[1m]",
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.pydantic.dev)",
