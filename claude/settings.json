@@ -3,9 +3,8 @@
     "allow": [
       "WebFetch(domain:docs.pydantic.dev)",
       "Bash(tree:*)",
-      "Bash(rf:*)",
+      "Bash(rg:*)",
       "Bash(fd:*)",
-      "Bash(find:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Read(./env.example)",
@@ -19,10 +18,31 @@
       "Read(./**/credentials/**)",
       "Read(./**/secrets/**)",
       "Read(./**/*.pem)",
-      "Read(./**/*.key)"
+      "Read(./**/*.key)",
+      "Read(~/.aws/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.modal.toml)",
+      "Bash(terraform apply:*)",
+      "Bash(terraform destroy:*)",
+      "Bash(terraform import:*)",
+      "Bash(terraform state:*)",
+      "Bash(modal secret:*)",
+      "Bash(modal environment:*)"
     ],
     "ask": [
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(aws:*)",
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(redis-cli:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)",
+      "Bash(git rebase:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh api:*)",
+      "Bash(brew install:*)",
+      "Bash(npm install -g:*)",
+      "Bash(pip install:*)"
     ]
   },
   "hooks": {
@@ -55,6 +75,15 @@
           {
             "type": "command",
             "command": "$HOME/.atuin/bin/atuin hook claude-code"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/dotfiles/claude/hooks/guard_dangerous_commands.py"
           }
         ]
       }
