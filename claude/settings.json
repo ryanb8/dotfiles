@@ -98,5 +98,7 @@
     "claude-opus-5-5": {
       "effortLevel": "high"
     }
-  }
+  },
+  "model": "opus",
+  "idleCompaction": false
 }
